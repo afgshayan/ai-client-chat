@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="Theme.AiClientChat" parent="android:Theme.Material.NoActionBar">
+        <item name="android:statusBarColor">@color/charcoal_bg</item>
+        <item name="android:navigationBarColor">@color/charcoal_bg</item>
+        <item name="android:windowBackground">@color/charcoal_bg</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="23">false</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="27">false</item>
+    </style>
+</resources>

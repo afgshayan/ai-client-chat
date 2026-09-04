@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">AI Client Chat</string>
+
+    <string name="onboarding_title">به AI Client Chat خوش آمدید</string>
+    <string name="onboarding_subtitle">برای شروع گفتگو، کلید API خود را وارد کنید. کلید شما فقط روی همین گوشی و به‌صورت رمزنگاری‌شده ذخیره می‌شود.</string>
+    <string name="onboarding_api_key_label">کلید API</string>
+    <string name="onboarding_api_key_hint">sk-ant-…</string>
+    <string name="onboarding_get_key_hint">می‌توانید کلید خود را از console.anthropic.com دریافت کنید.</string>
+    <string name="onboarding_continue">شروع گفتگو</string>
+
+    <string name="new_chat">گفتگوی جدید</string>
+    <string name="search_chats">جستجو در گفتگوها</string>
+    <string name="conversations">گفتگوها</string>
+    <string name="settings">تنظیمات</string>
+    <string name="rename">تغییر نام</string>
+    <string name="delete">حذف</string>
+    <string name="delete_conversation_confirm">این گفتگو برای همیشه حذف می‌شود.</string>
+    <string name="cancel">انصراف</string>
+    <string name="confirm">تأیید</string>
+
+    <string name="message_input_placeholder">پیام خود را بنویسید…</string>
+    <string name="send">ارسال</string>
+    <string name="stop_generating">توقف تولید پاسخ</string>
+    <string name="regenerate">تولید مجدد پاسخ</string>
+    <string name="copy">کپی</string>
+    <string name="copied">کپی شد</string>
+    <string name="edit_message">ویرایش پیام</string>
+    <string name="attach_image">افزودن تصویر</string>
+    <string name="remove_attachment">حذف پیوست</string>
+
+    <string name="model_picker_title">انتخاب مدل</string>
+    <string name="settings_api_key">کلید API</string>
+    <string name="settings_default_model">مدل پیش‌فرض</string>
+    <string name="settings_system_prompt">دستور سیستمی (System Prompt)</string>
+    <string name="settings_theme">پوسته</string>
+    <string name="settings_theme_system">پیش‌فرض سیستم</string>
+    <string name="settings_theme_light">روشن</string>
+    <string name="settings_theme_dark">تیره</string>
+    <string name="settings_font_size">اندازه قلم</string>
+    <string name="settings_clear_all">حذف همه گفتگوها</string>
+    <string name="settings_about">درباره برنامه</string>
+
+    <string name="error_no_api_key">ابتدا کلید API را در تنظیمات وارد کنید.</string>
+    <string name="error_network">خطا در اتصال به سرور. دوباره تلاش کنید.</string>
+    <string name="error_generic">مشکلی پیش آمد.</string>
+    <string name="retry">تلاش دوباره</string>
+
+    <string name="artifact_preview">پیش‌نمایش</string>
+    <string name="artifact_code">کد</string>
+</resources>
