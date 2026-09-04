@@ -21,11 +21,12 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AddPhotoAlternate
-import androidx.compose.material.icons.filled.ArrowUpward
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Stop
+import androidx.compose.material.icons.outlined.AddPhotoAlternate
+import androidx.compose.material.icons.outlined.ArrowUpward
+import androidx.compose.material.icons.outlined.Close
+import androidx.compose.material.icons.outlined.ExpandMore
+import androidx.compose.material.icons.outlined.Menu
+import androidx.compose.material.icons.outlined.Stop
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -119,7 +120,7 @@ fun ChatScreen(
                 TopAppBar(
                     navigationIcon = {
                         IconButton(onClick = { scope.launch { drawerState.open() } }) {
-                            Icon(Icons.Filled.Menu, contentDescription = "منو")
+                            Icon(Icons.Outlined.Menu, contentDescription = stringResource(R.string.menu))
                         }
                     },
                     title = {
@@ -127,6 +128,11 @@ fun ChatScreen(
                         val modelName = Models.AVAILABLE.find { it.id == modelId }?.displayName ?: modelId
                         TextButton(onClick = { showModelPicker = true }) {
                             Text(modelName, style = MaterialTheme.typography.titleMedium)
+                            Icon(
+                                Icons.Outlined.ExpandMore,
+                                contentDescription = null,
+                                modifier = Modifier.size(18.dp),
+                            )
                         }
                     },
                 )
@@ -210,7 +216,7 @@ private fun EmptyState(modifier: Modifier = Modifier) {
     Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Text(
-                "امروز چه کاری از دستم برمی‌آید؟",
+                stringResource(R.string.empty_state_greeting),
                 style = MaterialTheme.typography.headlineMedium,
                 color = MaterialTheme.colorScheme.onBackground,
             )
@@ -265,7 +271,7 @@ private fun ChatInputBar(
                                 onClick = { onRemoveImage(index) },
                                 modifier = Modifier.size(20.dp),
                             ) {
-                                Icon(Icons.Filled.Close, contentDescription = stringResource(R.string.remove_attachment))
+                                Icon(Icons.Outlined.Close, contentDescription = stringResource(R.string.remove_attachment))
                             }
                         }
                     }
@@ -273,7 +279,7 @@ private fun ChatInputBar(
             }
             Row(verticalAlignment = Alignment.Bottom) {
                 IconButton(onClick = onAttachImage) {
-                    Icon(Icons.Filled.AddPhotoAlternate, contentDescription = stringResource(R.string.attach_image))
+                    Icon(Icons.Outlined.AddPhotoAlternate, contentDescription = stringResource(R.string.attach_image))
                 }
                 OutlinedTextField(
                     value = text,
@@ -291,7 +297,7 @@ private fun ChatInputBar(
                             .size(44.dp)
                             .clip(CircleShape),
                     ) {
-                        Icon(Icons.Filled.Stop, contentDescription = stringResource(R.string.stop_generating))
+                        Icon(Icons.Outlined.Stop, contentDescription = stringResource(R.string.stop_generating))
                     }
                 } else {
                     IconButton(
@@ -303,7 +309,7 @@ private fun ChatInputBar(
                             .background(MaterialTheme.colorScheme.primary),
                     ) {
                         Icon(
-                            Icons.Filled.ArrowUpward,
+                            Icons.Outlined.ArrowUpward,
                             contentDescription = stringResource(R.string.send),
                             tint = MaterialTheme.colorScheme.onPrimary,
                         )

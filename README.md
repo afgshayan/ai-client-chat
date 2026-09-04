@@ -1,31 +1,41 @@
 # AI Client Chat
 
-اپلیکیشن اندروید بومی (Kotlin + Jetpack Compose) که تجربه‌ی گفتگو با هوش مصنوعی را شبیه به ظاهر و رفتار Claude ارائه می‌دهد و مستقیماً با استفاده از کلید API شخصی شما (BYOK — Bring Your Own Key) به Anthropic API وصل می‌شود. هیچ سرور واسطه‌ای وجود ندارد؛ کلید API فقط به‌صورت رمزنگاری‌شده روی گوشی خودتان ذخیره می‌شود.
+A native Android app (Kotlin + Jetpack Compose) that delivers a chat experience modeled after Claude's look and feel, connecting directly to the Anthropic API with your own API key (BYOK — Bring Your Own Key). There is no backend server in between; your key is stored only on your device, encrypted.
 
-## امکانات
+## Screenshots
 
-- ظاهر و پالت رنگی الهام‌گرفته از Claude (پوسته‌ی روشن/تیره با رنگ شاخص «خاکی/نارنجی‌سوخته»)
-- گفتگوی استریم‌شونده (پاسخ کلمه‌به‌کلمه) با قابلیت توقف تولید پاسخ
-- تاریخچه‌ی گفتگوها با ذخیره‌سازی محلی (Room)، جستجو، تغییرنام، سنجاق‌کردن و حذف
-- ارسال تصویر همراه پیام (چندوجهی/Vision)
-- نمایش Markdown کامل (تیتر، لیست، جدول، نقل‌قول، لینک) و بلوک‌های کد با هایلایت نحوی و دکمه‌ی کپی
-- «پیش‌نمایش» بلوک‌های HTML/SVG درون یک WebView (مشابه Artifacts)
-- ویرایش پیام کاربر و تولید مجدد پاسخ دستیار
-- انتخاب مدل (Opus / Sonnet / Fable / Haiku) به همراه دستور سیستمی و تنظیمات قابل‌شخصی‌سازی
-- پشتیبانی کامل از راست‌به‌چپ و رابط کاربری فارسی
+|  |  |
+|---|---|
+| ![Onboarding](docs/screenshots/onboarding.png) | ![New chat](docs/screenshots/chat-empty-state.png) |
+| ![Streaming reply with code block](docs/screenshots/chat-conversation-code.png) | ![Chat history sidebar](docs/screenshots/sidebar-drawer.png) |
+| ![Model picker](docs/screenshots/model-picker.png) | ![Settings](docs/screenshots/settings.png) |
+| ![Artifact preview](docs/screenshots/artifact-preview.png) | ![Dark theme](docs/screenshots/dark-theme-chat.png) |
 
-## تکنولوژی
+> These are high-fidelity design mockups built from the app's actual colors, copy, and layout (see `docs/screenshots/design-mockup.html`) — not screenshots captured from a running build, since this development environment has no Android SDK/emulator available. Build and run the app per the guide below to see it on a real device.
 
-Kotlin, Jetpack Compose (Material 3), Room, DataStore + EncryptedSharedPreferences, OkHttp (استریم SSE دستی برای Anthropic Messages API)، kotlinx.serialization، Markwon.
+## Features
 
-## ساخت و اجرا
+- Look and color palette inspired by Claude (light/dark themes with a signature clay/terracotta accent)
+- Streaming responses with a stop-generating control
+- Local chat history (Room) with search, rename, pin, and delete
+- Image attachments (multimodal/vision)
+- Full markdown rendering (headings, lists, tables, quotes, links) plus syntax-highlighted, copyable code blocks
+- HTML/SVG "artifact" preview in an in-app WebView
+- Edit a sent message and regenerate the assistant's response
+- Model picker (Opus / Sonnet / Fable / Haiku) with a per-chat system prompt and other settings
 
-برای راهنمای کامل گرفتن خروجی APK (نصب Android Studio، همگام‌سازی Gradle، ساخت نسخه‌ی debug/release و امضای اپ) فایل [`BUILD_APK_FA.md`](./BUILD_APK_FA.md) را ببینید.
+## Tech stack
 
-## حریم خصوصی
+Kotlin, Jetpack Compose (Material 3), Room, DataStore + EncryptedSharedPreferences, OkHttp (hand-rolled SSE streaming for the Anthropic Messages API), kotlinx.serialization, Markwon.
 
-این اپ هیچ بک‌اند اختصاصی ندارد. درخواست‌ها مستقیماً از گوشی شما به `api.anthropic.com` ارسال می‌شود و کلید API شما فقط در حافظه‌ی رمزنگاری‌شده‌ی همان دستگاه نگه‌داری می‌شود.
+## Build & run
 
-## محدودیت‌ها نسبت به اپلیکیشن رسمی Claude
+See [`BUILD_APK_FA.md`](./BUILD_APK_FA.md) for a full step-by-step guide (in Persian) to opening the project in Android Studio, syncing Gradle, and producing debug/signed release APKs.
 
-این پروژه یک کلاینت مستقل و غیررسمی است؛ برخی قابلیت‌های اپ رسمی مثل «Projects»، حالت صوتی، جست‌وجوی وب، یا اجرای تعاملی Artifacts در این نسخه پیاده‌سازی نشده و می‌توانند در آینده اضافه شوند.
+## Privacy
+
+This app has no dedicated backend. Requests go straight from your phone to `api.anthropic.com`, and your API key is kept only in encrypted storage on that same device.
+
+## Limitations vs. the official Claude app
+
+This is an independent, unofficial client. Some official-app features — Projects, voice mode, live web search, or interactive Artifact execution — are not implemented here and could be added in the future.

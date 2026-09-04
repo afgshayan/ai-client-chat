@@ -78,7 +78,7 @@ class AnthropicApiClient {
                 trySend(StreamEvent.Started)
                 val source = resp.body?.source()
                 if (source == null) {
-                    trySend(StreamEvent.Failed("پاسخ خالی از سرور دریافت شد."))
+                    trySend(StreamEvent.Failed("Received an empty response from the server."))
                     close()
                     return@use
                 }
@@ -96,7 +96,7 @@ class AnthropicApiClient {
                             val message = runCatching {
                                 Json.parseToJsonElement(data).jsonObject["error"]?.jsonObject
                                     ?.get("message")?.jsonPrimitive?.content
-                            }.getOrNull() ?: "خطای ناشناخته از سرور"
+                            }.getOrNull() ?: "Unknown server error"
                             trySend(StreamEvent.Failed(message))
                         }
                     }
@@ -107,10 +107,10 @@ class AnthropicApiClient {
         } catch (ce: CancellationException) {
             throw ce
         } catch (io: IOException) {
-            trySend(StreamEvent.Failed("خطا در اتصال به سرور: ${io.message ?: ""}"))
+            trySend(StreamEvent.Failed("Connection error: ${io.message ?: ""}"))
             close()
         } catch (e: Exception) {
-            trySend(StreamEvent.Failed(e.message ?: "خطای ناشناخته"))
+            trySend(StreamEvent.Failed(e.message ?: "Unknown error"))
             close()
         }
 
@@ -152,9 +152,9 @@ class AnthropicApiClient {
         }.getOrNull()
         return when {
             fromServer != null -> fromServer
-            code == 401 -> "کلید API نامعتبر است."
-            code == 429 -> "تعداد درخواست‌ها بیش از حد مجاز است. کمی صبر کنید."
-            else -> "خطای سرور ($code)"
+            code == 401 -> "Invalid API key."
+            code == 429 -> "Too many requests. Please wait a moment and try again."
+            else -> "Server error ($code)"
         }
     }
 

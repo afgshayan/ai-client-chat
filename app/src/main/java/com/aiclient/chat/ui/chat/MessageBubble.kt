@@ -20,10 +20,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ContentCopy
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.ErrorOutline
-import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.outlined.ContentCopy
+import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material.icons.outlined.ErrorOutline
+import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -37,8 +37,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
+import com.aiclient.chat.R
 import com.aiclient.chat.data.model.ChatMessage
 import com.aiclient.chat.data.model.Role
 import com.aiclient.chat.data.util.ImageEncoder
@@ -81,10 +83,10 @@ fun MessageBubble(
                 }
                 MessageActions {
                     IconButton(onClick = { clipboard.setText(AnnotatedString(message.text)) }) {
-                        Icon(Icons.Filled.ContentCopy, contentDescription = "کپی", modifier = Modifier.size(16.dp))
+                        Icon(Icons.Outlined.ContentCopy, contentDescription = stringResource(R.string.copy), modifier = Modifier.size(16.dp))
                     }
                     IconButton(onClick = { onEdit(message) }) {
-                        Icon(Icons.Filled.Edit, contentDescription = "ویرایش", modifier = Modifier.size(16.dp))
+                        Icon(Icons.Outlined.Edit, contentDescription = stringResource(R.string.edit_message), modifier = Modifier.size(16.dp))
                     }
                 }
             } else {
@@ -94,7 +96,7 @@ fun MessageBubble(
                     if (message.isError) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Icon(
-                                Icons.Filled.ErrorOutline,
+                                Icons.Outlined.ErrorOutline,
                                 contentDescription = null,
                                 tint = MaterialTheme.colorScheme.error,
                                 modifier = Modifier.size(16.dp),
@@ -113,10 +115,10 @@ fun MessageBubble(
                 if (!message.isStreaming && message.text.isNotBlank()) {
                     MessageActions {
                         IconButton(onClick = { clipboard.setText(AnnotatedString(message.text)) }) {
-                            Icon(Icons.Filled.ContentCopy, contentDescription = "کپی", modifier = Modifier.size(16.dp))
+                            Icon(Icons.Outlined.ContentCopy, contentDescription = stringResource(R.string.copy), modifier = Modifier.size(16.dp))
                         }
                         IconButton(onClick = onRegenerate) {
-                            Icon(Icons.Filled.Refresh, contentDescription = "تولید مجدد", modifier = Modifier.size(16.dp))
+                            Icon(Icons.Outlined.Refresh, contentDescription = stringResource(R.string.regenerate), modifier = Modifier.size(16.dp))
                         }
                     }
                 }

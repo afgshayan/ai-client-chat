@@ -27,7 +27,7 @@ class ChatRepository(
 
     suspend fun getConversation(id: String): Conversation? = conversationDao.getById(id)?.toDomain()
 
-    suspend fun createConversation(model: String, systemPrompt: String, title: String = "گفتگوی جدید"): Conversation {
+    suspend fun createConversation(model: String, systemPrompt: String, title: String = "New chat"): Conversation {
         val now = System.currentTimeMillis()
         val entity = ConversationEntity(
             id = UUID.randomUUID().toString(),

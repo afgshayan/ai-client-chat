@@ -187,7 +187,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
             if (conversation == null) {
                 conversation = repo.createConversation(defaultModel, defaultSystemPrompt, title = deriveTitle(text))
                 currentConversationId.value = conversation.id
-            } else if (conversation.title == "گفتگوی جدید" && text.isNotBlank()) {
+            } else if (conversation.title == app.getString(R.string.new_chat) && text.isNotBlank()) {
                 repo.renameConversation(conversation.id, deriveTitle(text))
             }
             val conversationId = conversation.id
@@ -309,6 +309,6 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
 
     private fun deriveTitle(text: String): String {
         val trimmed = text.trim().replace("\n", " ")
-        return if (trimmed.length > 48) trimmed.take(48) + "…" else trimmed.ifBlank { "گفتگوی جدید" }
+        return if (trimmed.length > 48) trimmed.take(48) + "…" else trimmed.ifBlank { app.getString(R.string.new_chat) }
     }
 }

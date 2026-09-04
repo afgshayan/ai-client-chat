@@ -13,12 +13,13 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.DriveFileRenameOutline
-import androidx.compose.material.icons.filled.PushPin
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material.icons.outlined.MoreVert
+import androidx.compose.material.icons.outlined.PushPin
+import androidx.compose.material.icons.outlined.Search
+import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenu
@@ -66,12 +67,12 @@ fun ConversationDrawer(
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 TextButton(onClick = onNewChat) {
-                    Icon(Icons.Filled.Add, contentDescription = null)
+                    Icon(Icons.Outlined.Add, contentDescription = null)
                     Spacer(Modifier.width(6.dp))
                     Text(stringResource(R.string.new_chat))
                 }
                 IconButton(onClick = onOpenSettings) {
-                    Icon(Icons.Filled.Settings, contentDescription = stringResource(R.string.settings))
+                    Icon(Icons.Outlined.Settings, contentDescription = stringResource(R.string.settings))
                 }
             }
 
@@ -82,7 +83,7 @@ fun ConversationDrawer(
                     .fillMaxWidth()
                     .padding(horizontal = 12.dp, vertical = 4.dp),
                 placeholder = { Text(stringResource(R.string.search_chats)) },
-                leadingIcon = { Icon(Icons.Filled.Search, contentDescription = null) },
+                leadingIcon = { Icon(Icons.Outlined.Search, contentDescription = null) },
                 singleLine = true,
             )
 
@@ -133,7 +134,7 @@ private fun ConversationRow(
             Row(modifier = Modifier.weight(1f)) {
                 if (conversation.pinned) {
                     Icon(
-                        Icons.Filled.PushPin,
+                        Icons.Outlined.PushPin,
                         contentDescription = null,
                         modifier = Modifier.padding(end = 6.dp),
                         tint = MaterialTheme.colorScheme.primary,
@@ -147,22 +148,22 @@ private fun ConversationRow(
             }
             Box {
                 IconButton(onClick = { menuOpen = true }, modifier = Modifier.height(20.dp)) {
-                    Text("⋮")
+                    Icon(Icons.Outlined.MoreVert, contentDescription = null)
                 }
                 DropdownMenu(expanded = menuOpen, onDismissRequest = { menuOpen = false }) {
                     DropdownMenuItem(
-                        text = { Text(if (conversation.pinned) "برداشتن سنجاق" else "سنجاق کردن") },
-                        leadingIcon = { Icon(Icons.Filled.PushPin, contentDescription = null) },
+                        text = { Text(stringResource(if (conversation.pinned) R.string.unpin_conversation else R.string.pin_conversation)) },
+                        leadingIcon = { Icon(Icons.Outlined.PushPin, contentDescription = null) },
                         onClick = { menuOpen = false; onTogglePin() },
                     )
                     DropdownMenuItem(
                         text = { Text(stringResource(R.string.rename)) },
-                        leadingIcon = { Icon(Icons.Filled.DriveFileRenameOutline, contentDescription = null) },
+                        leadingIcon = { Icon(Icons.Outlined.Edit, contentDescription = null) },
                         onClick = { menuOpen = false; renaming = true },
                     )
                     DropdownMenuItem(
                         text = { Text(stringResource(R.string.delete)) },
-                        leadingIcon = { Icon(Icons.Filled.Delete, contentDescription = null) },
+                        leadingIcon = { Icon(Icons.Outlined.Delete, contentDescription = null) },
                         onClick = { menuOpen = false; confirmDelete = true },
                     )
                 }

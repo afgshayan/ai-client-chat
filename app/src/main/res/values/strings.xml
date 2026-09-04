@@ -2,50 +2,56 @@
 <resources>
     <string name="app_name">AI Client Chat</string>
 
-    <string name="onboarding_title">به AI Client Chat خوش آمدید</string>
-    <string name="onboarding_subtitle">برای شروع گفتگو، کلید API خود را وارد کنید. کلید شما فقط روی همین گوشی و به‌صورت رمزنگاری‌شده ذخیره می‌شود.</string>
-    <string name="onboarding_api_key_label">کلید API</string>
+    <string name="onboarding_title">Welcome to AI Client Chat</string>
+    <string name="onboarding_subtitle">Enter your API key to start chatting. Your key is stored only on this device, encrypted.</string>
+    <string name="onboarding_api_key_label">API key</string>
     <string name="onboarding_api_key_hint">sk-ant-…</string>
-    <string name="onboarding_get_key_hint">می‌توانید کلید خود را از console.anthropic.com دریافت کنید.</string>
-    <string name="onboarding_continue">شروع گفتگو</string>
+    <string name="onboarding_get_key_hint">You can get a key from console.anthropic.com.</string>
+    <string name="onboarding_continue">Start chatting</string>
 
-    <string name="new_chat">گفتگوی جدید</string>
-    <string name="search_chats">جستجو در گفتگوها</string>
-    <string name="conversations">گفتگوها</string>
-    <string name="settings">تنظیمات</string>
-    <string name="rename">تغییر نام</string>
-    <string name="delete">حذف</string>
-    <string name="delete_conversation_confirm">این گفتگو برای همیشه حذف می‌شود.</string>
-    <string name="cancel">انصراف</string>
-    <string name="confirm">تأیید</string>
+    <string name="new_chat">New chat</string>
+    <string name="search_chats">Search chats</string>
+    <string name="conversations">Chats</string>
+    <string name="settings">Settings</string>
+    <string name="rename">Rename</string>
+    <string name="delete">Delete</string>
+    <string name="delete_conversation_confirm">This chat will be permanently deleted.</string>
+    <string name="cancel">Cancel</string>
+    <string name="confirm">Confirm</string>
+    <string name="menu">Menu</string>
+    <string name="pin_conversation">Pin</string>
+    <string name="unpin_conversation">Unpin</string>
+    <string name="close">Close</string>
 
-    <string name="message_input_placeholder">پیام خود را بنویسید…</string>
-    <string name="send">ارسال</string>
-    <string name="stop_generating">توقف تولید پاسخ</string>
-    <string name="regenerate">تولید مجدد پاسخ</string>
-    <string name="copy">کپی</string>
-    <string name="copied">کپی شد</string>
-    <string name="edit_message">ویرایش پیام</string>
-    <string name="attach_image">افزودن تصویر</string>
-    <string name="remove_attachment">حذف پیوست</string>
+    <string name="empty_state_greeting">What can I help with today?</string>
+    <string name="message_input_placeholder">Message AI Client Chat…</string>
+    <string name="send">Send</string>
+    <string name="stop_generating">Stop generating</string>
+    <string name="regenerate">Regenerate response</string>
+    <string name="copy">Copy</string>
+    <string name="copied">Copied</string>
+    <string name="edit_message">Edit message</string>
+    <string name="attach_image">Attach image</string>
+    <string name="remove_attachment">Remove attachment</string>
+    <string name="plain_text">Text</string>
 
-    <string name="model_picker_title">انتخاب مدل</string>
-    <string name="settings_api_key">کلید API</string>
-    <string name="settings_default_model">مدل پیش‌فرض</string>
-    <string name="settings_system_prompt">دستور سیستمی (System Prompt)</string>
-    <string name="settings_theme">پوسته</string>
-    <string name="settings_theme_system">پیش‌فرض سیستم</string>
-    <string name="settings_theme_light">روشن</string>
-    <string name="settings_theme_dark">تیره</string>
-    <string name="settings_font_size">اندازه قلم</string>
-    <string name="settings_clear_all">حذف همه گفتگوها</string>
-    <string name="settings_about">درباره برنامه</string>
+    <string name="model_picker_title">Choose a model</string>
+    <string name="settings_api_key">API key</string>
+    <string name="settings_default_model">Default model</string>
+    <string name="settings_system_prompt">System prompt</string>
+    <string name="settings_theme">Appearance</string>
+    <string name="settings_theme_system">System</string>
+    <string name="settings_theme_light">Light</string>
+    <string name="settings_theme_dark">Dark</string>
+    <string name="settings_font_size">Text size</string>
+    <string name="settings_clear_all">Delete all chats</string>
+    <string name="settings_about">AI Client Chat is an independent, unofficial client. It connects directly to the Anthropic API using your own key — there is no separate backend server.</string>
 
-    <string name="error_no_api_key">ابتدا کلید API را در تنظیمات وارد کنید.</string>
-    <string name="error_network">خطا در اتصال به سرور. دوباره تلاش کنید.</string>
-    <string name="error_generic">مشکلی پیش آمد.</string>
-    <string name="retry">تلاش دوباره</string>
+    <string name="error_no_api_key">Add your API key in Settings first.</string>
+    <string name="error_network">Couldn\'t reach the server. Please try again.</string>
+    <string name="error_generic">Something went wrong.</string>
+    <string name="retry">Retry</string>
 
-    <string name="artifact_preview">پیش‌نمایش</string>
-    <string name="artifact_code">کد</string>
+    <string name="artifact_preview">Preview</string>
+    <string name="artifact_code">Code</string>
 </resources>

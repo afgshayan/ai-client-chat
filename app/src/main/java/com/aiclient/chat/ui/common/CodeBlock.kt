@@ -9,9 +9,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.ContentCopy
-import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.outlined.Check
+import androidx.compose.material.icons.outlined.ContentCopy
+import androidx.compose.material.icons.outlined.Visibility
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -28,10 +28,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.aiclient.chat.R
 import kotlinx.coroutines.delay
 
 private val PREVIEWABLE_LANGUAGES = setOf("html", "htm", "svg")
@@ -69,15 +71,15 @@ fun CodeBlock(
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 Text(
-                    text = language.ifBlank { "متن" },
+                    text = language.ifBlank { stringResource(R.string.plain_text) },
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
                 Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                     if (onPreview != null && language.lowercase() in PREVIEWABLE_LANGUAGES) {
                         TextButton(onClick = { onPreview(language, code) }) {
-                            Icon(Icons.Filled.Visibility, contentDescription = null, modifier = Modifier.padding(end = 4.dp))
-                            Text("پیش‌نمایش", style = MaterialTheme.typography.labelMedium)
+                            Icon(Icons.Outlined.Visibility, contentDescription = null, modifier = Modifier.padding(end = 4.dp))
+                            Text(stringResource(R.string.artifact_preview), style = MaterialTheme.typography.labelMedium)
                         }
                     }
                     IconButton(onClick = {
@@ -85,8 +87,8 @@ fun CodeBlock(
                         copied = true
                     }) {
                         Icon(
-                            if (copied) Icons.Filled.Check else Icons.Filled.ContentCopy,
-                            contentDescription = "کپی کد",
+                            if (copied) Icons.Outlined.Check else Icons.Outlined.ContentCopy,
+                            contentDescription = stringResource(R.string.copy),
                         )
                     }
                 }

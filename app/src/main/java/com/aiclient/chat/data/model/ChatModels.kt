@@ -31,10 +31,10 @@ data class AiModel(
 
 object Models {
     val AVAILABLE = listOf(
-        AiModel("claude-opus-5", "Opus 5", "قوی‌ترین مدل برای کارهای پیچیده و استدلال عمیق"),
-        AiModel("claude-sonnet-5", "Sonnet 5", "تعادل بین سرعت و توانمندی، مناسب اکثر کارها"),
-        AiModel("claude-fable-5-1", "Fable 5.1", "مدل خلاقانه برای نوشتن و گفتگوی طبیعی"),
-        AiModel("claude-haiku-4-5-20251001", "Haiku 4.5", "سریع‌ترین مدل برای پاسخ‌های آنی"),
+        AiModel("claude-opus-5", "Opus 5", "Most capable model for complex tasks and deep reasoning"),
+        AiModel("claude-sonnet-5", "Sonnet 5", "Balances speed and capability — great for most tasks"),
+        AiModel("claude-fable-5-1", "Fable 5.1", "Creative model for writing and natural conversation"),
+        AiModel("claude-haiku-4-5-20251001", "Haiku 4.5", "Fastest model for near-instant responses"),
     )
 
     val DEFAULT = AVAILABLE[1].id

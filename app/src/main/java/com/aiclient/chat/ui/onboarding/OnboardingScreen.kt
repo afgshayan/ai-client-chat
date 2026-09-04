@@ -9,8 +9,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material.icons.outlined.Visibility
+import androidx.compose.material.icons.outlined.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -65,7 +65,7 @@ fun OnboardingScreen(onApiKeySubmitted: (String) -> Unit) {
             trailingIcon = {
                 IconButton(onClick = { visible = !visible }) {
                     Icon(
-                        if (visible) Icons.Filled.VisibilityOff else Icons.Filled.Visibility,
+                        if (visible) Icons.Outlined.VisibilityOff else Icons.Outlined.Visibility,
                         contentDescription = null,
                     )
                 }

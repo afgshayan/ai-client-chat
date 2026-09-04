@@ -1,0 +1,379 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<title>AI Client Chat — Screen Mockups (v2)</title>
+<style>
+  :root{
+    --clay-500:#CC785C; --clay-600:#BF6A4D; --clay-700:#A85A40;
+    --cream-bg:#F5F4EE; --cream-surface:#FAF9F5; --cream-sidebar:#EDECE4;
+    --ink-900:#2E2B26; --ink-600:#5E594E; --outline-light:#E5E2D9;
+    --charcoal-bg:#262624; --charcoal-surface:#30302E; --charcoal-sidebar:#1F1E1C;
+    --bone-100:#F0EEE6; --bone-400:#B8B5AA; --outline-dark:#3D3B37;
+    --error:#C4432E;
+  }
+  *{box-sizing:border-box;}
+  body{
+    background:#e9e4da; margin:0; padding:40px;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;
+    display:flex; flex-wrap:wrap; gap:36px; align-items:flex-start;
+  }
+  svg.icon{ width:20px; height:20px; stroke:currentColor; stroke-width:1.7; fill:none; stroke-linecap:round; stroke-linejoin:round; flex:0 0 auto; }
+  .icon-sm{ width:16px; height:16px; }
+  .icon-lg{ width:24px; height:24px; }
+
+  .frame-wrap{ text-align:center; }
+  .frame-label{
+    font-size:12.5px; color:#5a5346; margin-bottom:10px; font-weight:600; letter-spacing:.2px;
+  }
+  .phone{
+    width:360px; height:760px; border-radius:40px; background:#111;
+    padding:10px; box-shadow:0 20px 50px rgba(0,0,0,.35);
+  }
+  .screen{
+    width:100%; height:100%; border-radius:32px; overflow:hidden;
+    position:relative; display:flex; flex-direction:column;
+    background:var(--cream-bg); color:var(--ink-900); -webkit-font-smoothing:antialiased;
+  }
+  .screen.dark{ background:var(--charcoal-bg); color:var(--bone-100); }
+  .statusbar{
+    height:26px; flex:0 0 auto; display:flex; align-items:center; justify-content:space-between;
+    padding:0 22px; font-size:12px; font-weight:600; color:inherit; opacity:.7;
+  }
+  .icon-btn{
+    width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+    color:inherit; opacity:.8;
+  }
+  .topbar{
+    flex:0 0 auto; height:50px; display:flex; align-items:center; justify-content:space-between; padding:0 6px;
+  }
+  .model-pill{
+    display:flex; align-items:center; gap:2px; font-weight:600; font-size:15px; padding:6px 8px; border-radius:14px; color:inherit;
+  }
+  .content{ flex:1 1 auto; overflow:hidden; padding:16px 18px 8px; display:flex; flex-direction:column; min-height:0; }
+  .empty-state{ flex:1; display:flex; align-items:center; justify-content:center; text-align:center; padding:0 20px; }
+  .empty-state h2{ font-family:Georgia,"Iowan Old Style","Times New Roman",serif; font-weight:400; font-size:24px; line-height:1.4; margin:0; letter-spacing:.1px; }
+
+  .msgs{ flex:1; display:flex; flex-direction:column; gap:20px; overflow:hidden; padding-bottom:6px; min-width:0; }
+  .row{ display:flex; min-width:0; }
+  .row.user{ justify-content:flex-end; }
+  .row.assistant{ justify-content:flex-start; }
+  .bubble-col{ max-width:84%; display:flex; flex-direction:column; min-width:0; }
+  .row.user .bubble-col{ align-items:flex-end; }
+  .row.assistant .bubble-col{ max-width:100%; align-items:flex-start; flex:1 1 auto; }
+  .user-bubble{ background:rgba(204,120,92,.13); border-radius:20px; padding:10px 15px; font-size:14.5px; line-height:1.55; }
+  .msg-actions{ display:flex; gap:2px; margin-top:4px; color:var(--ink-600); }
+  .screen.dark .msg-actions{ color:var(--bone-400); }
+  .msg-actions .icon-btn{ width:28px; height:28px; opacity:.8; }
+  .assistant-text{ font-size:14.5px; line-height:1.62; }
+  .assistant-text b{ font-weight:600; }
+  .code-card{ border-radius:12px; overflow:hidden; margin:10px 0; font-family:"SF Mono",Consolas,Menlo,monospace; width:100%; min-width:0; border:1px solid var(--outline-light); }
+  .screen.dark .code-card{ border-color:var(--outline-dark); }
+  .screen:not(.dark) .code-card{ background:#EFEDE4; }
+  .screen.dark .code-card{ background:var(--charcoal-surface); }
+  .code-head{ display:flex; justify-content:space-between; align-items:center; padding:7px 12px; font-size:12px; opacity:.7; font-family:-apple-system,sans-serif; }
+  .code-head .actions{ display:flex; align-items:center; gap:10px; }
+  .code-body{ padding:4px 14px 12px; font-size:12.5px; line-height:1.65; white-space:pre-wrap; word-break:break-word; }
+  .tok-kw{ color:#A85A40; } .screen.dark .tok-kw{ color:#E38C6E; }
+  .tok-str{ color:#4B7A3E; } .screen.dark .tok-str{ color:#9FBF8F; }
+  .tok-com{ color:#8A8574; } .screen.dark .tok-com{ color:#8A8781; }
+  .typing{ display:flex; gap:5px; padding:4px 0 2px; }
+  .typing span{ width:6px; height:6px; border-radius:50%; background:var(--clay-500); opacity:.45; }
+  .typing span:nth-child(2){opacity:.75;} .typing span:nth-child(3){opacity:1;}
+
+  .inputbar{ flex:0 0 auto; padding:10px 14px 18px; }
+  .input-shell{
+    display:flex; align-items:flex-end; gap:6px; border-radius:26px; padding:6px 6px 6px 14px;
+  }
+  .screen:not(.dark) .input-shell{ background:var(--cream-surface); border:1.5px solid var(--outline-light); }
+  .screen.dark .input-shell{ background:var(--charcoal-surface); border:1.5px solid var(--outline-dark); }
+  .textfield-text{ flex:1; font-size:14.5px; padding:9px 0; color:inherit; opacity:.45; }
+  .send-btn{ width:34px; height:34px; border-radius:50%; background:var(--clay-500); color:#fff; display:flex; align-items:center; justify-content:center; flex:0 0 auto; margin-bottom:2px; }
+  .send-btn.disabled{ background:#DFD6C9; color:#fff; }
+  .screen.dark .send-btn.disabled{ background:#4A4741; }
+
+  .onboard{ padding:36px 26px; display:flex; flex-direction:column; justify-content:center; height:100%; }
+  .onboard h1{ font-family:Georgia,"Iowan Old Style",serif; font-weight:400; font-size:25px; margin:0 0 14px; }
+  .onboard p{ font-size:13.5px; color:var(--ink-600); line-height:1.7; margin:0 0 26px; }
+  .field{ border:1.5px solid var(--outline-light); border-radius:12px; padding:14px 14px; font-size:14px; display:flex; justify-content:space-between; align-items:center; color:#a39c8c; }
+  .field-label{ font-size:11.5px; font-weight:600; color:var(--ink-600); margin-bottom:7px; text-transform:uppercase; letter-spacing:.4px; }
+  .hint{ font-size:12px; color:var(--ink-600); margin-top:10px; }
+  .primary-btn{ margin-top:24px; background:var(--clay-500); color:#fff; text-align:center; padding:14px; border-radius:14px; font-weight:600; font-size:14.5px; }
+  .primary-btn.disabled{ background:#e4d9cd; color:#fff; }
+
+  .drawer-screen{ flex-direction:row; }
+  .drawer{ width:80%; height:100%; background:var(--cream-surface); display:flex; flex-direction:column; border-right:1px solid var(--outline-light); }
+  .drawer-scrim{ flex:1; background:rgba(0,0,0,.35); }
+  .drawer-top{ display:flex; justify-content:space-between; align-items:center; padding:16px 14px 6px; }
+  .new-chat-btn{ display:flex; align-items:center; gap:7px; color:var(--clay-600); font-weight:600; font-size:14px; }
+  .search-box{ margin:10px 14px 12px; border:1.5px solid var(--outline-light); border-radius:12px; padding:9px 12px; font-size:13px; color:#a39c8c; display:flex; align-items:center; gap:8px; }
+  .conv-list{ flex:1; overflow:hidden; }
+  .conv-item{ padding:12px 16px; font-size:13.5px; display:flex; justify-content:space-between; align-items:center; gap:8px; }
+  .conv-item.active{ background:rgba(204,120,92,.15); font-weight:600; }
+  .conv-item .conv-title{ display:flex; align-items:center; gap:7px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
+  .conv-item .conv-title svg{ color:var(--clay-600); flex:0 0 auto; }
+  .conv-item .dots{ opacity:.55; flex:0 0 auto; }
+
+  .sheet-screen{ justify-content:flex-end; }
+  .sheet-scrim{ flex:1; background:rgba(0,0,0,.35); }
+  .sheet{ background:var(--cream-surface); border-radius:24px 24px 0 0; padding:8px 0 26px; }
+  .sheet-handle{ width:36px; height:4px; border-radius:2px; background:var(--outline-light); margin:6px auto 4px; }
+  .sheet h3{ padding:12px 20px 6px; margin:0; font-size:16px; font-weight:700; }
+  .model-row{ padding:14px 20px; display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--outline-light); }
+  .model-row .name{ font-weight:600; font-size:14.5px; }
+  .model-row .desc{ font-size:12px; color:var(--ink-600); margin-top:3px; }
+  .model-row .check{ color:var(--clay-500); }
+
+  .settings-body{ padding:20px 22px; overflow:hidden; }
+  .settings-section-title{ font-weight:600; font-size:14px; margin:0 0 10px; }
+  .settings-divider{ height:1px; background:var(--outline-light); margin:22px 0; }
+  .settings-row{ display:flex; justify-content:space-between; align-items:center; font-size:13.5px; }
+  .chip-row{ display:flex; border:1.5px solid var(--outline-light); border-radius:12px; overflow:hidden; }
+  .chip{ flex:1; text-align:center; padding:9px 0; font-size:12.5px; }
+  .chip.active{ background:var(--clay-500); color:#fff; font-weight:600; }
+  .danger-btn{ border:1.5px solid var(--error); color:var(--error); border-radius:12px; padding:11px; text-align:center; font-size:13px; font-weight:600; }
+  .select-pill{ border:1.5px solid var(--outline-light); border-radius:12px; padding:10px 14px; display:inline-flex; align-items:center; gap:6px; font-size:13.5px; }
+
+  .artifact-top{ display:flex; justify-content:space-between; align-items:center; padding:12px 14px; }
+  .artifact-tabs{ display:flex; gap:4px; font-size:13px; font-weight:600; background:var(--cream-sidebar); border-radius:10px; padding:3px; }
+  .artifact-tabs span{ padding:6px 12px; border-radius:8px; color:var(--ink-600); }
+  .artifact-tabs span.active{ background:#fff; color:var(--ink-900); }
+  .artifact-body{ flex:1; display:flex; align-items:center; justify-content:center; background:#fff; margin:0 12px 12px; border-radius:16px; border:1px solid var(--outline-light); }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute">
+<defs>
+  <symbol id="i-menu" viewBox="0 0 24 24"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></symbol>
+  <symbol id="i-chevron-down" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></symbol>
+  <symbol id="i-chevron-left" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></symbol>
+  <symbol id="i-arrow-up" viewBox="0 0 24 24"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></symbol>
+  <symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.6"/><polyline points="21 15 16 10 5 21"/></symbol>
+  <symbol id="i-square" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.2" y2="16.2"/></symbol>
+  <symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 12.9c.04-.3.06-.6.06-.9s-.02-.6-.06-.9l2-1.6-2-3.4-2.4 1a7.6 7.6 0 0 0-1.5-.9l-.4-2.6H9.9l-.4 2.6c-.5.2-1 .5-1.5.9l-2.4-1-2 3.4 2 1.6c-.04.3-.06.6-.06.9s.02.6.06.9l-2 1.6 2 3.4 2.4-1c.5.4 1 .7 1.5.9l.4 2.6h4.2l.4-2.6c.5-.2 1-.5 1.5-.9l2.4 1 2-3.4-2-1.6z"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.4"/></symbol>
+  <symbol id="i-edit" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24"><polyline points="4 6 6 6 20 6"/><path d="M18 6l-1 13a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L6 6"/><path d="M9.5 6V4.6c0-.6.5-1.1 1.1-1.1h2.8c.6 0 1.1.5 1.1 1.1V6"/></symbol>
+  <symbol id="i-more" viewBox="0 0 24 24"><circle cx="12" cy="5.5" r="1.1"/><circle cx="12" cy="12" r="1.1"/><circle cx="12" cy="18.5" r="1.1"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="12" height="12" rx="2.2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></symbol>
+  <symbol id="i-eye" viewBox="0 0 24 24"><path d="M1.5 12S5.5 5 12 5s10.5 7 10.5 7-4 7-10.5 7S1.5 12 1.5 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+  <symbol id="i-refresh" viewBox="0 0 24 24"><polyline points="21 4 21 9 16 9"/><polyline points="3 20 3 15 8 15"/><path d="M4 9a8.1 8.1 0 0 1 13.7-3.5L21 9M3 15a8.1 8.1 0 0 0 13.7 3.5L20 15"/></symbol>
+  <symbol id="i-code" viewBox="0 0 24 24"><polyline points="15 6 21 12 15 18"/><polyline points="9 18 3 12 9 6"/></symbol>
+  <symbol id="i-error" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="13"/><circle cx="12" cy="16.2" r="0.4"/></symbol>
+</defs>
+</svg>
+
+<div class="frame-wrap">
+  <div class="frame-label">1 — Onboarding (API key)</div>
+  <div class="phone"><div class="screen" id="s1">
+    <div class="statusbar"><span>9:41</span><span>••••</span></div>
+    <div class="onboard">
+      <h1>Welcome to AI Client Chat</h1>
+      <p>Enter your API key to start chatting. Your key is stored only on this device, encrypted.</p>
+      <div class="field-label">API key</div>
+      <div class="field"><span>sk-ant-…</span><svg class="icon"><use href="#i-eye"/></svg></div>
+      <div class="hint">You can get a key from console.anthropic.com.</div>
+      <div class="primary-btn disabled">Start chatting</div>
+    </div>
+  </div></div>
+</div>
+
+<div class="frame-wrap">
+  <div class="frame-label">2 — New chat (empty state)</div>
+  <div class="phone"><div class="screen" id="s2">
+    <div class="statusbar"><span>9:41</span><span>••••</span></div>
+    <div class="topbar">
+      <div class="icon-btn"><svg class="icon"><use href="#i-menu"/></svg></div>
+      <div class="model-pill">Sonnet 5 <svg class="icon icon-sm"><use href="#i-chevron-down"/></svg></div>
+      <div style="width:38px"></div>
+    </div>
+    <div class="empty-state"><h2>What can I help with today?</h2></div>
+    <div class="inputbar"><div class="input-shell">
+      <div class="icon-btn" style="width:32px;height:32px;opacity:.65"><svg class="icon icon-sm"><use href="#i-image"/></svg></div>
+      <div class="textfield-text">Message AI Client Chat…</div>
+      <div class="send-btn disabled"><svg class="icon icon-sm" style="stroke:#fff"><use href="#i-arrow-up"/></svg></div>
+    </div></div>
+  </div></div>
+</div>
+
+<div class="frame-wrap">
+  <div class="frame-label">3 — Streaming reply + code block</div>
+  <div class="phone"><div class="screen" id="s3">
+    <div class="statusbar"><span>9:41</span><span>••••</span></div>
+    <div class="topbar">
+      <div class="icon-btn"><svg class="icon"><use href="#i-menu"/></svg></div>
+      <div class="model-pill">Sonnet 5 <svg class="icon icon-sm"><use href="#i-chevron-down"/></svg></div>
+      <div style="width:38px"></div>
+    </div>
+    <div class="content">
+      <div class="msgs">
+        <div class="row user"><div class="bubble-col">
+          <div class="user-bubble">Write a Kotlin function for quicksort.</div>
+          <div class="msg-actions">
+            <div class="icon-btn"><svg class="icon icon-sm"><use href="#i-copy"/></svg></div>
+            <div class="icon-btn"><svg class="icon icon-sm"><use href="#i-edit"/></svg></div>
+          </div>
+        </div></div>
+        <div class="row assistant"><div class="bubble-col">
+          <div class="assistant-text">Sure — here's a simple quicksort implementation in Kotlin:</div>
+          <div class="code-card">
+            <div class="code-head"><span>kotlin</span>
+              <div class="actions"><svg class="icon icon-sm"><use href="#i-copy"/></svg></div>
+            </div>
+            <div class="code-body">fun &lt;T : Comparable&lt;T&gt;&gt; quickSort(list: List&lt;T&gt;): List&lt;T&gt; {
+    <span class="tok-kw">if</span> (list.size &lt;= 1) <span class="tok-kw">return</span> list
+    <span class="tok-com">// pick the middle element as pivot</span>
+    <span class="tok-kw">val</span> pivot = list[list.size / 2]
+    ...
+}</div>
+          </div>
+          <div class="assistant-text" style="opacity:.6">Writing the rest of the explanation…</div>
+          <div class="typing"><span></span><span></span><span></span></div>
+        </div></div>
+      </div>
+    </div>
+    <div class="inputbar"><div class="input-shell">
+      <div class="icon-btn" style="width:32px;height:32px;opacity:.65"><svg class="icon icon-sm"><use href="#i-image"/></svg></div>
+      <div class="textfield-text">Message AI Client Chat…</div>
+      <div class="send-btn"><svg class="icon icon-sm" style="stroke:#fff"><use href="#i-square"/></svg></div>
+    </div></div>
+  </div></div>
+</div>
+
+<div class="frame-wrap">
+  <div class="frame-label">4 — Chat history sidebar</div>
+  <div class="phone"><div class="screen drawer-screen" id="s4">
+    <div class="drawer">
+      <div class="statusbar"><span>9:41</span><span>••••</span></div>
+      <div class="drawer-top">
+        <div class="new-chat-btn"><svg class="icon icon-sm"><use href="#i-plus"/></svg>New chat</div>
+        <div class="icon-btn"><svg class="icon"><use href="#i-settings"/></svg></div>
+      </div>
+      <div class="search-box"><svg class="icon icon-sm"><use href="#i-search"/></svg>Search chats</div>
+      <div class="conv-list">
+        <div class="conv-item active"><span class="conv-title"><svg class="icon icon-sm"><use href="#i-pin"/></svg>Kotlin quicksort helper</span><svg class="icon icon-sm dots"><use href="#i-more"/></svg></div>
+        <div class="conv-item"><span class="conv-title">Trip planning for Lisbon</span><svg class="icon icon-sm dots"><use href="#i-more"/></svg></div>
+        <div class="conv-item"><span class="conv-title">Summarize ML research paper</span><svg class="icon icon-sm dots"><use href="#i-more"/></svg></div>
+        <div class="conv-item"><span class="conv-title">Naming ideas for online store</span><svg class="icon icon-sm dots"><use href="#i-more"/></svg></div>
+        <div class="conv-item"><span class="conv-title">Fixing an Android layout bug</span><svg class="icon icon-sm dots"><use href="#i-more"/></svg></div>
+        <div class="conv-item"><span class="conv-title">New chat</span><svg class="icon icon-sm dots"><use href="#i-more"/></svg></div>
+      </div>
+    </div>
+    <div class="drawer-scrim"></div>
+  </div></div>
+</div>
+
+<div class="frame-wrap">
+  <div class="frame-label">5 — Model picker</div>
+  <div class="phone"><div class="screen sheet-screen" id="s5">
+    <div class="sheet-scrim"></div>
+    <div class="sheet">
+      <div class="sheet-handle"></div>
+      <h3>Choose a model</h3>
+      <div class="model-row"><div><div class="name">Opus 5</div><div class="desc">Most capable model for complex tasks and deep reasoning</div></div></div>
+      <div class="model-row"><div><div class="name">Sonnet 5</div><div class="desc">Balances speed and capability — great for most tasks</div></div><svg class="icon check"><use href="#i-check"/></svg></div>
+      <div class="model-row"><div><div class="name">Fable 5.1</div><div class="desc">Creative model for writing and natural conversation</div></div></div>
+      <div class="model-row"><div><div class="name">Haiku 4.5</div><div class="desc">Fastest model for near-instant responses</div></div></div>
+    </div>
+  </div></div>
+</div>
+
+<div class="frame-wrap">
+  <div class="frame-label">6 — Settings</div>
+  <div class="phone"><div class="screen" id="s6">
+    <div class="statusbar"><span>9:41</span><span>••••</span></div>
+    <div class="topbar" style="padding:0 4px">
+      <div class="icon-btn"><svg class="icon"><use href="#i-chevron-left"/></svg></div>
+      <div style="font-weight:600">Settings</div>
+      <div style="width:38px"></div>
+    </div>
+    <div class="settings-body">
+      <div class="settings-section-title">API key</div>
+      <div class="settings-row"><span>sk-ant…wxYZ</span><span style="color:var(--clay-600);font-weight:600">Delete</span></div>
+      <div class="settings-divider"></div>
+      <div class="settings-section-title">Default model</div>
+      <div class="select-pill">Sonnet 5 <svg class="icon icon-sm"><use href="#i-chevron-down"/></svg></div>
+      <div class="settings-divider"></div>
+      <div class="settings-section-title">Appearance</div>
+      <div class="chip-row">
+        <div class="chip">System</div>
+        <div class="chip active">Light</div>
+        <div class="chip">Dark</div>
+      </div>
+      <div class="settings-divider"></div>
+      <div class="settings-section-title">Text size</div>
+      <div style="height:4px;border-radius:2px;background:var(--outline-light);position:relative;margin:14px 4px;">
+        <div style="position:absolute;left:0;top:-8px;width:20px;height:20px;border-radius:50%;background:var(--clay-500)"></div>
+      </div>
+      <div class="settings-divider"></div>
+      <div class="danger-btn">Delete all chats</div>
+    </div>
+  </div></div>
+</div>
+
+<div class="frame-wrap">
+  <div class="frame-label">7 — Artifact preview (SVG/HTML)</div>
+  <div class="phone"><div class="screen" id="s7">
+    <div class="statusbar"><span>9:41</span><span>••••</span></div>
+    <div class="artifact-top">
+      <div class="icon-btn"><svg class="icon"><use href="#i-x"/></svg></div>
+      <div class="artifact-tabs"><span class="active">Preview</span><span>Code</span></div>
+      <div class="icon-btn"><svg class="icon"><use href="#i-copy"/></svg></div>
+    </div>
+    <div class="artifact-body">
+      <svg width="150" height="150" viewBox="0 0 150 150">
+        <circle cx="75" cy="75" r="60" fill="#CC785C" opacity="0.12"/>
+        <circle cx="75" cy="75" r="42" fill="#CC785C" opacity="0.3"/>
+        <circle cx="75" cy="75" r="22" fill="#CC785C"/>
+      </svg>
+    </div>
+  </div></div>
+</div>
+
+<div class="frame-wrap">
+  <div class="frame-label">8 — Dark theme</div>
+  <div class="phone"><div class="screen dark" id="s8">
+    <div class="statusbar"><span>9:41</span><span>••••</span></div>
+    <div class="topbar">
+      <div class="icon-btn"><svg class="icon"><use href="#i-menu"/></svg></div>
+      <div class="model-pill">Sonnet 5 <svg class="icon icon-sm"><use href="#i-chevron-down"/></svg></div>
+      <div style="width:38px"></div>
+    </div>
+    <div class="content">
+      <div class="msgs">
+        <div class="row user"><div class="bubble-col">
+          <div class="user-bubble">What's the difference between val and var in Kotlin?</div>
+          <div class="msg-actions">
+            <div class="icon-btn"><svg class="icon icon-sm"><use href="#i-copy"/></svg></div>
+            <div class="icon-btn"><svg class="icon icon-sm"><use href="#i-edit"/></svg></div>
+          </div>
+        </div></div>
+        <div class="row assistant"><div class="bubble-col">
+          <div class="assistant-text"><b>val</b> declares a read-only reference, while <b>var</b> declares one that can be reassigned.</div>
+          <div class="code-card">
+            <div class="code-head"><span>kotlin</span><div class="actions"><svg class="icon icon-sm"><use href="#i-copy"/></svg></div></div>
+            <div class="code-body"><span class="tok-kw">val</span> name = <span class="tok-str">"Claude"</span>  <span class="tok-com">// can't be reassigned</span>
+<span class="tok-kw">var</span> count = 0        <span class="tok-com">// can be reassigned</span></div>
+          </div>
+          <div class="msg-actions">
+            <div class="icon-btn"><svg class="icon icon-sm"><use href="#i-copy"/></svg></div>
+            <div class="icon-btn"><svg class="icon icon-sm"><use href="#i-refresh"/></svg></div>
+          </div>
+        </div></div>
+      </div>
+    </div>
+    <div class="inputbar"><div class="input-shell">
+      <div class="icon-btn" style="width:32px;height:32px;opacity:.65"><svg class="icon icon-sm"><use href="#i-image"/></svg></div>
+      <div class="textfield-text">Message AI Client Chat…</div>
+      <div class="send-btn disabled"><svg class="icon icon-sm" style="stroke:#fff"><use href="#i-arrow-up"/></svg></div>
+    </div></div>
+  </div></div>
+</div>
+
+</body>
+</html>

@@ -12,8 +12,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.ContentCopy
+import androidx.compose.material.icons.outlined.Close
+import androidx.compose.material.icons.outlined.ContentCopy
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -28,11 +28,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.window.Dialog
+import com.aiclient.chat.R
 import com.aiclient.chat.ui.common.SyntaxHighlighter
 
 @Composable
@@ -54,14 +56,14 @@ fun ArtifactSheet(artifact: ArtifactPreview, onDismiss: () -> Unit) {
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     IconButton(onClick = onDismiss) {
-                        Icon(Icons.Filled.Close, contentDescription = "بستن")
+                        Icon(Icons.Outlined.Close, contentDescription = stringResource(R.string.close))
                     }
                     Row {
-                        TextButton(onClick = { showingCode = false }) { Text("پیش‌نمایش") }
-                        TextButton(onClick = { showingCode = true }) { Text("کد") }
+                        TextButton(onClick = { showingCode = false }) { Text(stringResource(R.string.artifact_preview)) }
+                        TextButton(onClick = { showingCode = true }) { Text(stringResource(R.string.artifact_code)) }
                     }
                     IconButton(onClick = { clipboard.setText(AnnotatedString(artifact.code)) }) {
-                        Icon(Icons.Filled.ContentCopy, contentDescription = "کپی کد")
+                        Icon(Icons.Outlined.ContentCopy, contentDescription = stringResource(R.string.copy))
                     }
                 }
                 if (showingCode) {
