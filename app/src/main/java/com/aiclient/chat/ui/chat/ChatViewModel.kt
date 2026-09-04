@@ -180,8 +180,8 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
         }
 
         viewModelScope.launch {
-            val defaultModel = first(settings.defaultModel)
-            val defaultSystemPrompt = first(settings.systemPrompt)
+            val defaultModel = settings.defaultModel.first()
+            val defaultSystemPrompt = settings.systemPrompt.first()
 
             var conversation = currentConversationId.value?.let { repo.getConversation(it) }
             if (conversation == null) {
@@ -227,7 +227,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
             if (lastAssistant != null) {
                 repo.deleteMessagesFrom(convId, lastAssistant.createdAt)
             }
-            val defaultSystemPrompt = first(settings.systemPrompt)
+            val defaultSystemPrompt = settings.systemPrompt.first()
             runGeneration(convId, conversation.model, conversation.systemPrompt.ifBlank { defaultSystemPrompt }, apiKey)
         }
     }
@@ -243,7 +243,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
             val conversation = repo.getConversation(convId) ?: return@launch
             repo.deleteMessagesFrom(convId, message.createdAt)
             repo.addMessage(message.copy(text = newText, createdAt = message.createdAt))
-            val defaultSystemPrompt = first(settings.systemPrompt)
+            val defaultSystemPrompt = settings.systemPrompt.first()
             runGeneration(convId, conversation.model, conversation.systemPrompt.ifBlank { defaultSystemPrompt }, apiKey)
         }
     }

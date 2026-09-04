@@ -67,14 +67,12 @@ fun ArtifactSheet(artifact: ArtifactPreview, onDismiss: () -> Unit) {
                     }
                 }
                 if (showingCode) {
-                    val highlighted = remember(artifact) {
-                        SyntaxHighlighter.highlight(
-                            artifact.code,
-                            keywordColor = MaterialTheme.colorScheme.primary,
-                            stringColor = MaterialTheme.colorScheme.tertiary,
-                            commentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                            numberColor = MaterialTheme.colorScheme.secondary,
-                        )
+                    val keywordColor = MaterialTheme.colorScheme.primary
+                    val stringColor = MaterialTheme.colorScheme.tertiary
+                    val commentColor = MaterialTheme.colorScheme.onSurfaceVariant
+                    val numberColor = MaterialTheme.colorScheme.secondary
+                    val highlighted = remember(artifact, keywordColor, stringColor, commentColor, numberColor) {
+                        SyntaxHighlighter.highlight(artifact.code, keywordColor, stringColor, commentColor, numberColor)
                     }
                     Text(
                         text = highlighted,
