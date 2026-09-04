@@ -9,11 +9,24 @@ import androidx.room.PrimaryKey
 data class ConversationEntity(
     @PrimaryKey val id: String,
     val title: String,
+    val providerId: String,
     val model: String,
     val systemPrompt: String = "",
     val createdAt: Long,
     val updatedAt: Long,
     val pinned: Boolean = false,
+)
+
+@Entity(tableName = "providers")
+data class ProviderEntity(
+    @PrimaryKey val id: String,
+    val name: String,
+    val kind: String,
+    val baseUrl: String,
+    val authHeaderName: String,
+    val authScheme: String,
+    val model: String,
+    val createdAt: Long,
 )
 
 @Entity(

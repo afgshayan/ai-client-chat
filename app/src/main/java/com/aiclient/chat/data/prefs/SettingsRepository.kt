@@ -8,7 +8,6 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
-import com.aiclient.chat.data.model.Models
 import com.aiclient.chat.ui.theme.AppThemeMode
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -17,8 +16,8 @@ private val Context.dataStore by preferencesDataStore(name = "settings")
 
 class SettingsRepository(private val context: Context) {
 
-    // The API key is sensitive, so it lives in an encrypted keystore-backed
-    // file rather than plain DataStore.
+    // API keys are sensitive, so they live in an encrypted keystore-backed
+    // file rather than plain DataStore — one entry per configured provider.
     private val securePrefs by lazy {
         val masterKey = MasterKey.Builder(context)
             .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
@@ -32,22 +31,22 @@ class SettingsRepository(private val context: Context) {
         )
     }
 
-    fun getApiKey(): String? = securePrefs.getString(KEY_API_KEY, null)
+    fun getApiKey(providerId: String): String? = securePrefs.getString(apiKeyPrefKey(providerId), null)
 
-    fun setApiKey(key: String) {
-        securePrefs.edit().putString(KEY_API_KEY, key).apply()
+    fun setApiKey(providerId: String, key: String) {
+        securePrefs.edit().putString(apiKeyPrefKey(providerId), key).apply()
     }
 
-    fun clearApiKey() {
-        securePrefs.edit().remove(KEY_API_KEY).apply()
+    fun clearApiKey(providerId: String) {
+        securePrefs.edit().remove(apiKeyPrefKey(providerId)).apply()
     }
 
-    val defaultModel: Flow<String> = context.dataStore.data.map {
-        it[DEFAULT_MODEL] ?: Models.DEFAULT
-    }
+    private fun apiKeyPrefKey(providerId: String) = "api_key_$providerId"
 
-    suspend fun setDefaultModel(modelId: String) {
-        context.dataStore.edit { it[DEFAULT_MODEL] = modelId }
+    val defaultProviderId: Flow<String?> = context.dataStore.data.map { it[DEFAULT_PROVIDER_ID] }
+
+    suspend fun setDefaultProviderId(providerId: String) {
+        context.dataStore.edit { it[DEFAULT_PROVIDER_ID] = providerId }
     }
 
     val systemPrompt: Flow<String> = context.dataStore.data.map { it[SYSTEM_PROMPT] ?: "" }
@@ -70,20 +69,10 @@ class SettingsRepository(private val context: Context) {
         context.dataStore.edit { it[FONT_SCALE] = scale }
     }
 
-    val onboardingComplete: Flow<Boolean> = context.dataStore.data.map {
-        it[ONBOARDING_DONE] ?: false
-    }
-
-    suspend fun setOnboardingComplete(done: Boolean) {
-        context.dataStore.edit { it[ONBOARDING_DONE] = done }
-    }
-
     companion object {
-        private const val KEY_API_KEY = "api_key"
-        private val DEFAULT_MODEL = stringPreferencesKey("default_model")
+        private val DEFAULT_PROVIDER_ID = stringPreferencesKey("default_provider_id")
         private val SYSTEM_PROMPT = stringPreferencesKey("system_prompt")
         private val THEME_MODE = stringPreferencesKey("theme_mode")
         private val FONT_SCALE = floatPreferencesKey("font_scale")
-        private val ONBOARDING_DONE = booleanPreferencesKey("onboarding_done")
     }
 }

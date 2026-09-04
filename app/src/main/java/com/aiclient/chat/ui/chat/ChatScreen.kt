@@ -60,7 +60,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.aiclient.chat.R
 import com.aiclient.chat.data.model.ChatMessage
-import com.aiclient.chat.data.model.Models
 import com.aiclient.chat.ui.theme.Clay500
 import kotlinx.coroutines.launch
 
@@ -126,10 +125,10 @@ fun ChatScreen(
                         }
                     },
                     title = {
-                        val modelId = uiState.currentConversation?.model ?: Models.DEFAULT
-                        val modelName = Models.AVAILABLE.find { it.id == modelId }?.displayName ?: modelId
+                        val activeProvider = uiState.providers.find { it.id == uiState.activeProviderId }
+                        val label = activeProvider?.name ?: uiState.currentConversation?.model.orEmpty()
                         TextButton(onClick = { showModelPicker = true }) {
-                            Text(modelName, style = MaterialTheme.typography.titleMedium)
+                            Text(label, style = MaterialTheme.typography.titleMedium)
                             Icon(
                                 Icons.Outlined.ExpandMore,
                                 contentDescription = null,
@@ -191,8 +190,10 @@ fun ChatScreen(
 
     if (showModelPicker) {
         ModelPickerSheet(
-            selectedModel = uiState.currentConversation?.model ?: Models.DEFAULT,
-            onSelect = viewModel::setModel,
+            providers = uiState.providers,
+            selectedProviderId = uiState.activeProviderId,
+            onSelect = viewModel::selectProvider,
+            onManageProviders = onOpenSettings,
             onDismiss = { showModelPicker = false },
         )
     }

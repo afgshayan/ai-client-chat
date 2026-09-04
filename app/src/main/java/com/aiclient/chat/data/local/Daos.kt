@@ -61,3 +61,21 @@ interface MessageDao {
     @Query("DELETE FROM messages WHERE conversationId = :conversationId AND createdAt >= :fromCreatedAt")
     suspend fun deleteFrom(conversationId: String, fromCreatedAt: Long)
 }
+
+@Dao
+interface ProviderDao {
+    @Query("SELECT * FROM providers ORDER BY createdAt ASC")
+    fun observeAll(): Flow<List<ProviderEntity>>
+
+    @Query("SELECT * FROM providers ORDER BY createdAt ASC")
+    suspend fun getAll(): List<ProviderEntity>
+
+    @Query("SELECT * FROM providers WHERE id = :id")
+    suspend fun getById(id: String): ProviderEntity?
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsert(provider: ProviderEntity)
+
+    @Query("DELETE FROM providers WHERE id = :id")
+    suspend fun delete(id: String)
+}

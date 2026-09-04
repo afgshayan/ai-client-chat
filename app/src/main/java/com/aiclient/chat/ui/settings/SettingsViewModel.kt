@@ -4,19 +4,18 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.aiclient.chat.AiClientApp
-import com.aiclient.chat.data.model.Models
+import com.aiclient.chat.data.model.AiProvider
 import com.aiclient.chat.ui.theme.AppThemeMode
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 data class SettingsUiState(
-    val hasApiKey: Boolean = false,
-    val maskedApiKey: String = "",
-    val defaultModel: String = Models.DEFAULT,
+    val providers: List<AiProvider> = emptyList(),
+    val defaultProviderId: String? = null,
     val systemPrompt: String = "",
     val themeMode: AppThemeMode = AppThemeMode.SYSTEM,
     val fontScale: Float = 1.0f,
@@ -24,47 +23,56 @@ data class SettingsUiState(
 
 class SettingsViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val settings get() = getApplication<AiClientApp>().settingsRepository
-
-    private val apiKeyState = MutableStateFlow(settings.getApiKey())
+    private val app get() = getApplication<AiClientApp>()
+    private val repo get() = app.chatRepository
+    private val settings get() = app.settingsRepository
 
     val uiState: StateFlow<SettingsUiState> = combine(
-        settings.defaultModel,
+        repo.observeProviders(),
+        settings.defaultProviderId,
         settings.systemPrompt,
         settings.themeMode,
         settings.fontScale,
-        apiKeyState,
-    ) { model, prompt, theme, scale, apiKey ->
+    ) { providers, defaultProviderId, prompt, theme, scale ->
         SettingsUiState(
-            hasApiKey = !apiKey.isNullOrBlank(),
-            maskedApiKey = apiKey?.let { maskKey(it) } ?: "",
-            defaultModel = model,
+            providers = providers,
+            defaultProviderId = defaultProviderId,
             systemPrompt = prompt,
             themeMode = theme,
             fontScale = scale,
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), SettingsUiState())
 
-    fun setApiKey(key: String) {
-        settings.setApiKey(key.trim())
-        apiKeyState.value = key.trim()
+    fun getApiKey(providerId: String): String? = settings.getApiKey(providerId)
+
+    fun maskedApiKey(providerId: String): String {
+        val key = settings.getApiKey(providerId)
+        if (key.isNullOrBlank()) return ""
+        return if (key.length <= 8) "••••••••" else key.take(6) + "…" + key.takeLast(4)
     }
 
-    fun clearApiKey() {
-        settings.clearApiKey()
-        apiKeyState.value = null
+    fun saveProvider(provider: AiProvider, apiKey: String) = viewModelScope.launch {
+        repo.saveProvider(provider)
+        if (apiKey.isNotBlank()) settings.setApiKey(provider.id, apiKey) else settings.clearApiKey(provider.id)
+        if (settings.defaultProviderId.first() == null) {
+            settings.setDefaultProviderId(provider.id)
+        }
     }
 
-    fun setDefaultModel(modelId: String) = viewModelScope.launch { settings.setDefaultModel(modelId) }
+    fun deleteProvider(id: String) = viewModelScope.launch {
+        repo.deleteProvider(id)
+        settings.clearApiKey(id)
+        if (settings.defaultProviderId.first() == id) {
+            val remaining = repo.getProviders().firstOrNull { it.id != id }
+            if (remaining != null) settings.setDefaultProviderId(remaining.id)
+        }
+    }
+
+    fun setDefaultProvider(id: String) = viewModelScope.launch { settings.setDefaultProviderId(id) }
 
     fun setSystemPrompt(prompt: String) = viewModelScope.launch { settings.setSystemPrompt(prompt) }
 
     fun setThemeMode(mode: AppThemeMode) = viewModelScope.launch { settings.setThemeMode(mode) }
 
     fun setFontScale(scale: Float) = viewModelScope.launch { settings.setFontScale(scale) }
-
-    private fun maskKey(key: String): String {
-        if (key.length <= 8) return "••••••••"
-        return key.take(6) + "…" + key.takeLast(4)
-    }
 }

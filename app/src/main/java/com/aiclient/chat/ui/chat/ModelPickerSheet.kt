@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Check
+import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -19,13 +20,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.aiclient.chat.R
-import com.aiclient.chat.data.model.Models
+import com.aiclient.chat.data.model.AiProvider
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ModelPickerSheet(
-    selectedModel: String,
-    onSelect: (String) -> Unit,
+    providers: List<AiProvider>,
+    selectedProviderId: String?,
+    onSelect: (AiProvider) -> Unit,
+    onManageProviders: () -> Unit,
     onDismiss: () -> Unit,
 ) {
     ModalBottomSheet(onDismissRequest = onDismiss) {
@@ -35,29 +38,44 @@ fun ModelPickerSheet(
             modifier = Modifier.padding(horizontal = 20.dp, vertical = 8.dp),
         )
         Column(modifier = Modifier.padding(bottom = 24.dp)) {
-            Models.AVAILABLE.forEach { model ->
-                val isSelected = model.id == selectedModel
+            providers.forEach { provider ->
+                val isSelected = provider.id == selectedProviderId
                 val emphasisColor = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clickable { onSelect(model.id); onDismiss() }
+                        .clickable { onSelect(provider); onDismiss() }
                         .padding(horizontal = 20.dp, vertical = 14.dp),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
-                            model.displayName,
+                            provider.name,
                             style = MaterialTheme.typography.titleMedium,
                             color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
                         )
-                        Text(model.description, style = MaterialTheme.typography.bodyMedium, color = emphasisColor)
+                        Text(provider.model, style = MaterialTheme.typography.bodyMedium, color = emphasisColor)
                     }
                     if (isSelected) {
                         Icon(Icons.Outlined.Check, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
                     }
                 }
                 Divider()
+            }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { onDismiss(); onManageProviders() }
+                    .padding(horizontal = 20.dp, vertical = 16.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Icon(Icons.Outlined.Settings, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text(
+                    stringResource(R.string.model_picker_manage),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(start = 12.dp),
+                )
             }
         }
     }

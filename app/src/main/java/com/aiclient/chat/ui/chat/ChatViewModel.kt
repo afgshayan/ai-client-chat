@@ -6,6 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.aiclient.chat.AiClientApp
 import com.aiclient.chat.R
+import com.aiclient.chat.data.model.AiProvider
 import com.aiclient.chat.data.model.ChatMessage
 import com.aiclient.chat.data.model.Conversation
 import com.aiclient.chat.data.model.Role
@@ -19,6 +20,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -28,12 +30,17 @@ data class ChatUiState(
     val conversations: List<Conversation> = emptyList(),
     val currentConversation: Conversation? = null,
     val messages: List<ChatMessage> = emptyList(),
+    val providers: List<AiProvider> = emptyList(),
+    val defaultProviderId: String? = null,
     val isGenerating: Boolean = false,
     val searchQuery: String = "",
     val pendingImages: List<String> = emptyList(),
     val errorMessage: String? = null,
     val artifact: ArtifactPreview? = null,
-)
+) {
+    /** The provider that would be used for the next message in this chat. */
+    val activeProviderId: String? get() = currentConversation?.providerId ?: defaultProviderId
+}
 
 data class ArtifactPreview(val language: String, val code: String)
 
@@ -71,6 +78,8 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
         pendingImages,
         errorMessage,
         artifact,
+        repo.observeProviders(),
+        settings.defaultProviderId,
     ) { values ->
         @Suppress("UNCHECKED_CAST")
         val convs = values[0] as List<Conversation>
@@ -82,10 +91,14 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
         val images = values[6] as List<String>
         val error = values[7] as String?
         val art = values[8] as ArtifactPreview?
+        val providers = values[9] as List<AiProvider>
+        val defaultProviderId = values[10] as String?
         ChatUiState(
             conversations = convs,
             currentConversation = convs.find { it.id == currentId },
             messages = if (streaming != null) msgs + streaming else msgs,
+            providers = providers,
+            defaultProviderId = defaultProviderId,
             isGenerating = generating,
             searchQuery = query,
             pendingImages = images,
@@ -101,7 +114,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
         }
         viewModelScope.launch {
             currentConversationId.flatMapLatest { id ->
-                if (id == null) kotlinx.coroutines.flow.flowOf(emptyList()) else repo.observeMessages(id)
+                if (id == null) flowOf(emptyList()) else repo.observeMessages(id)
             }.collect { messagesFlow.value = it }
         }
     }
@@ -130,13 +143,13 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
         repo.setPinned(conversation.id, !conversation.pinned)
     }
 
-    /** Changes the model for the active conversation, or the app-wide default when no chat is open yet. */
-    fun setModel(modelId: String) = viewModelScope.launch {
+    /** Assigns [provider] to the active conversation, or sets it as the app-wide default when no chat is open yet. */
+    fun selectProvider(provider: AiProvider) = viewModelScope.launch {
         val convId = currentConversationId.value
         if (convId != null) {
-            repo.touchConversation(convId, modelId)
+            repo.setConversationProvider(convId, provider.id, provider.model)
         } else {
-            settings.setDefaultModel(modelId)
+            settings.setDefaultProviderId(provider.id)
         }
     }
 
@@ -173,24 +186,35 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
 
     fun sendMessage(text: String) {
         if (text.isBlank() && pendingImages.value.isEmpty()) return
-        val apiKey = settings.getApiKey()
-        if (apiKey.isNullOrBlank()) {
-            errorMessage.value = app.getString(R.string.error_no_api_key)
-            return
-        }
 
         viewModelScope.launch {
-            val defaultModel = settings.defaultModel.first()
             val defaultSystemPrompt = settings.systemPrompt.first()
-
             var conversation = currentConversationId.value?.let { repo.getConversation(it) }
+
+            val provider: AiProvider
             if (conversation == null) {
-                conversation = repo.createConversation(defaultModel, defaultSystemPrompt, title = deriveTitle(text))
+                val defaultProviderId = settings.defaultProviderId.first()
+                val defaultProvider = defaultProviderId?.let { repo.getProvider(it) }
+                if (defaultProvider == null) {
+                    errorMessage.value = app.getString(R.string.error_no_api_key)
+                    return@launch
+                }
+                provider = defaultProvider
+                conversation = repo.createConversation(provider.id, provider.model, defaultSystemPrompt, title = deriveTitle(text))
                 currentConversationId.value = conversation.id
-            } else if (conversation.title == app.getString(R.string.new_chat) && text.isNotBlank()) {
-                repo.renameConversation(conversation.id, deriveTitle(text))
+            } else {
+                val resolved = repo.getProvider(conversation.providerId)
+                if (resolved == null) {
+                    errorMessage.value = app.getString(R.string.error_no_api_key)
+                    return@launch
+                }
+                provider = resolved
+                if (conversation.title == app.getString(R.string.new_chat) && text.isNotBlank()) {
+                    repo.renameConversation(conversation.id, deriveTitle(text))
+                }
             }
             val conversationId = conversation.id
+            val apiKey = settings.getApiKey(provider.id).orEmpty()
 
             val userMessage = ChatMessage(
                 id = UUID.randomUUID().toString(),
@@ -203,7 +227,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
             repo.addMessage(userMessage)
             pendingImages.value = emptyList()
 
-            runGeneration(conversationId, conversation.model, conversation.systemPrompt.ifBlank { defaultSystemPrompt }, apiKey)
+            runGeneration(conversationId, provider, conversation.systemPrompt.ifBlank { defaultSystemPrompt }, apiKey)
         }
     }
 
@@ -215,40 +239,42 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
 
     fun regenerateLastResponse() {
         val convId = currentConversationId.value ?: return
-        val apiKey = settings.getApiKey()
-        if (apiKey.isNullOrBlank()) {
-            errorMessage.value = app.getString(R.string.error_no_api_key)
-            return
-        }
         viewModelScope.launch {
             val conversation = repo.getConversation(convId) ?: return@launch
+            val provider = repo.getProvider(conversation.providerId)
+            if (provider == null) {
+                errorMessage.value = app.getString(R.string.error_no_api_key)
+                return@launch
+            }
+            val apiKey = settings.getApiKey(provider.id).orEmpty()
             val history = repo.getHistory(convId)
             val lastAssistant = history.lastOrNull { it.role == Role.ASSISTANT }
             if (lastAssistant != null) {
                 repo.deleteMessagesFrom(convId, lastAssistant.createdAt)
             }
             val defaultSystemPrompt = settings.systemPrompt.first()
-            runGeneration(convId, conversation.model, conversation.systemPrompt.ifBlank { defaultSystemPrompt }, apiKey)
+            runGeneration(convId, provider, conversation.systemPrompt.ifBlank { defaultSystemPrompt }, apiKey)
         }
     }
 
     fun editUserMessage(message: ChatMessage, newText: String) {
         val convId = currentConversationId.value ?: return
-        val apiKey = settings.getApiKey()
-        if (apiKey.isNullOrBlank()) {
-            errorMessage.value = app.getString(R.string.error_no_api_key)
-            return
-        }
         viewModelScope.launch {
             val conversation = repo.getConversation(convId) ?: return@launch
+            val provider = repo.getProvider(conversation.providerId)
+            if (provider == null) {
+                errorMessage.value = app.getString(R.string.error_no_api_key)
+                return@launch
+            }
+            val apiKey = settings.getApiKey(provider.id).orEmpty()
             repo.deleteMessagesFrom(convId, message.createdAt)
             repo.addMessage(message.copy(text = newText, createdAt = message.createdAt))
             val defaultSystemPrompt = settings.systemPrompt.first()
-            runGeneration(convId, conversation.model, conversation.systemPrompt.ifBlank { defaultSystemPrompt }, apiKey)
+            runGeneration(convId, provider, conversation.systemPrompt.ifBlank { defaultSystemPrompt }, apiKey)
         }
     }
 
-    private fun runGeneration(conversationId: String, model: String, systemPrompt: String, apiKey: String) {
+    private fun runGeneration(conversationId: String, provider: AiProvider, systemPrompt: String, apiKey: String) {
         generationJob?.cancel()
         streamingAccumulator = StringBuilder()
         streamingMessage.value = ChatMessage(
@@ -263,7 +289,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
 
         generationJob = viewModelScope.launch {
             val history = repo.getHistory(conversationId)
-            api.streamMessage(apiKey, model, systemPrompt, history).collect { event ->
+            api.streamMessage(provider, apiKey, systemPrompt, history).collect { event ->
                 when (event) {
                     is StreamEvent.Started -> Unit
                     is StreamEvent.TextDelta -> {

@@ -3,10 +3,7 @@
     <string name="app_name">AI Client Chat</string>
 
     <string name="onboarding_title">Welcome to AI Client Chat</string>
-    <string name="onboarding_subtitle">Enter your API key to start chatting. Your key is stored only on this device, encrypted.</string>
-    <string name="onboarding_api_key_label">API key</string>
-    <string name="onboarding_api_key_hint">sk-ant-…</string>
-    <string name="onboarding_get_key_hint">You can get a key from console.anthropic.com.</string>
+    <string name="onboarding_subtitle">Connect a provider to start chatting. Your keys are stored only on this device, encrypted.</string>
     <string name="onboarding_continue">Start chatting</string>
 
     <string name="new_chat">New chat</string>
@@ -22,6 +19,8 @@
     <string name="pin_conversation">Pin</string>
     <string name="unpin_conversation">Unpin</string>
     <string name="close">Close</string>
+    <string name="back">Back</string>
+    <string name="save">Save</string>
 
     <string name="empty_state_greeting">What can I help with today?</string>
     <string name="message_input_placeholder">Message AI Client Chat…</string>
@@ -35,9 +34,8 @@
     <string name="remove_attachment">Remove attachment</string>
     <string name="plain_text">Text</string>
 
-    <string name="model_picker_title">Choose a model</string>
-    <string name="settings_api_key">API key</string>
-    <string name="settings_default_model">Default model</string>
+    <string name="model_picker_title">Choose a provider</string>
+    <string name="model_picker_manage">Manage providers</string>
     <string name="settings_system_prompt">System prompt</string>
     <string name="settings_theme">Appearance</string>
     <string name="settings_theme_system">System</string>
@@ -45,9 +43,23 @@
     <string name="settings_theme_dark">Dark</string>
     <string name="settings_font_size">Text size</string>
     <string name="settings_clear_all">Delete all chats</string>
-    <string name="settings_about">AI Client Chat is an independent, unofficial client. It connects directly to the Anthropic API using your own key — there is no separate backend server.</string>
+    <string name="settings_about">AI Client Chat is an independent, unofficial client. It connects directly to each provider\'s API using your own keys — there is no separate backend server.</string>
 
-    <string name="error_no_api_key">Add your API key in Settings first.</string>
+    <string name="providers_title">AI providers</string>
+    <string name="providers_add">Add provider</string>
+    <string name="providers_empty">No providers configured yet.</string>
+    <string name="provider_default_badge">Default</string>
+    <string name="provider_set_default">Set as default</string>
+    <string name="provider_delete_confirm">This will remove the provider and its saved key.</string>
+    <string name="provider_choose_preset_title">Choose a provider</string>
+    <string name="provider_name_label">Name</string>
+    <string name="provider_base_url_label">Base URL</string>
+    <string name="provider_model_label">Model</string>
+    <string name="provider_model_hint">Type any model ID this provider supports.</string>
+    <string name="provider_key_optional_hint">Leave blank if this endpoint doesn\'t require a key.</string>
+
+    <string name="error_no_api_key">Add an AI provider in Settings first.</string>
+    <string name="error_no_provider">Choose a provider for this chat first.</string>
     <string name="error_network">Couldn\'t reach the server. Please try again.</string>
     <string name="error_generic">Something went wrong.</string>
     <string name="retry">Retry</string>
