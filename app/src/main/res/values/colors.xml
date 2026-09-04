@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Warm "clay" accent, matching the reference app's signature terracotta tone -->
+    <color name="clay_500">#CC785C</color>
+    <color name="clay_600">#BF6A4D</color>
+    <color name="clay_700">#A85A40</color>
+
+    <!-- Light theme surfaces -->
+    <color name="cream_bg">#F5F4EE</color>
+    <color name="cream_surface">#FAF9F5</color>
+    <color name="cream_sidebar">#EDECE4</color>
+    <color name="ink_900">#2E2B26</color>
+    <color name="ink_600">#5E594E</color>
+    <color name="outline_light">#E1DFD6</color>
+
+    <!-- Dark theme surfaces -->
+    <color name="charcoal_bg">#262624</color>
+    <color name="charcoal_surface">#30302E</color>
+    <color name="charcoal_sidebar">#1F1E1C</color>
+    <color name="bone_100">#F0EEE6</color>
+    <color name="bone_400">#B8B5AA</color>
+    <color name="outline_dark">#3D3B37</color>
+
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="error_red">#C4432E</color>
+</resources>
