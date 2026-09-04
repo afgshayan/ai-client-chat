@@ -76,7 +76,9 @@ fun SettingsScreen(viewModel: SettingsViewModel, onClearAllConversations: () -> 
             if (uiState.hasApiKey) {
                 Row(verticalAlignment = androidx.compose.ui.Alignment.CenterVertically) {
                     Text(uiState.maskedApiKey, modifier = Modifier.weight(1f))
-                    TextButton(onClick = { viewModel.clearApiKey() }) { Text(stringResource(R.string.delete)) }
+                    TextButton(onClick = { viewModel.clearApiKey() }) {
+                        Text(stringResource(R.string.delete), color = MaterialTheme.colorScheme.error)
+                    }
                 }
             } else {
                 OutlinedTextField(

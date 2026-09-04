@@ -10,7 +10,7 @@
     --ink-900:#2E2B26; --ink-600:#5E594E; --outline-light:#E5E2D9;
     --charcoal-bg:#262624; --charcoal-surface:#30302E; --charcoal-sidebar:#1F1E1C;
     --bone-100:#F0EEE6; --bone-400:#B8B5AA; --outline-dark:#3D3B37;
-    --error:#C4432E;
+    --error:#C4432E; --link-blue:#3B68C4; --ink-pill:#2E2B26;
   }
   *{box-sizing:border-box;}
   body{
@@ -88,9 +88,12 @@
   .screen:not(.dark) .input-shell{ background:var(--cream-surface); border:1.5px solid var(--outline-light); }
   .screen.dark .input-shell{ background:var(--charcoal-surface); border:1.5px solid var(--outline-dark); }
   .textfield-text{ flex:1; font-size:14.5px; padding:9px 0; color:inherit; opacity:.45; }
-  .send-btn{ width:34px; height:34px; border-radius:50%; background:var(--clay-500); color:#fff; display:flex; align-items:center; justify-content:center; flex:0 0 auto; margin-bottom:2px; }
+  .send-btn{ width:34px; height:34px; border-radius:50%; background:var(--ink-pill); color:#fff; display:flex; align-items:center; justify-content:center; flex:0 0 auto; margin-bottom:2px; }
   .send-btn.disabled{ background:#DFD6C9; color:#fff; }
-  .screen.dark .send-btn.disabled{ background:#4A4741; }
+  .screen.dark .send-btn{ background:var(--bone-100); color:var(--charcoal-bg); }
+  .screen.dark .send-btn svg{ stroke:var(--charcoal-bg) !important; }
+  .screen.dark .send-btn.disabled{ background:#4A4741; color:#fff; }
+  .screen.dark .send-btn.disabled svg{ stroke:#fff !important; }
 
   .onboard{ padding:36px 26px; display:flex; flex-direction:column; justify-content:center; height:100%; }
   .onboard h1{ font-family:Georgia,"Iowan Old Style",serif; font-weight:400; font-size:25px; margin:0 0 14px; }
@@ -98,21 +101,27 @@
   .field{ border:1.5px solid var(--outline-light); border-radius:12px; padding:14px 14px; font-size:14px; display:flex; justify-content:space-between; align-items:center; color:#a39c8c; }
   .field-label{ font-size:11.5px; font-weight:600; color:var(--ink-600); margin-bottom:7px; text-transform:uppercase; letter-spacing:.4px; }
   .hint{ font-size:12px; color:var(--ink-600); margin-top:10px; }
-  .primary-btn{ margin-top:24px; background:var(--clay-500); color:#fff; text-align:center; padding:14px; border-radius:14px; font-weight:600; font-size:14.5px; }
-  .primary-btn.disabled{ background:#e4d9cd; color:#fff; }
+  .primary-btn{ margin-top:24px; background:var(--ink-pill); color:#fff; text-align:center; padding:14px; border-radius:14px; font-weight:600; font-size:14.5px; }
+  .primary-btn.disabled{ background:#ddd8cd; color:#fff; }
+  .sparkle-mark{ margin-bottom:16px; }
 
   .drawer-screen{ flex-direction:row; }
-  .drawer{ width:80%; height:100%; background:var(--cream-surface); display:flex; flex-direction:column; border-right:1px solid var(--outline-light); }
+  .drawer{ width:80%; height:100%; background:var(--cream-surface); display:flex; flex-direction:column; border-right:1px solid var(--outline-light); position:relative; }
   .drawer-scrim{ flex:1; background:rgba(0,0,0,.35); }
-  .drawer-top{ display:flex; justify-content:space-between; align-items:center; padding:16px 14px 6px; }
-  .new-chat-btn{ display:flex; align-items:center; gap:7px; color:var(--clay-600); font-weight:600; font-size:14px; }
-  .search-box{ margin:10px 14px 12px; border:1.5px solid var(--outline-light); border-radius:12px; padding:9px 12px; font-size:13px; color:#a39c8c; display:flex; align-items:center; gap:8px; }
+  .drawer-top{ display:flex; justify-content:space-between; align-items:center; padding:18px 16px 4px; }
+  .drawer-title{ font-family:Georgia,"Iowan Old Style",serif; font-weight:400; font-size:26px; }
+  .search-box{ margin:14px 14px 12px; border:1.5px solid var(--outline-light); border-radius:12px; padding:9px 12px; font-size:13px; color:#a39c8c; display:flex; align-items:center; gap:8px; }
   .conv-list{ flex:1; overflow:hidden; }
   .conv-item{ padding:12px 16px; font-size:13.5px; display:flex; justify-content:space-between; align-items:center; gap:8px; }
-  .conv-item.active{ background:rgba(204,120,92,.15); font-weight:600; }
+  .conv-item.active{ background:rgba(46,43,38,.06); font-weight:600; }
   .conv-item .conv-title{ display:flex; align-items:center; gap:7px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
   .conv-item .conv-title svg{ color:var(--clay-600); flex:0 0 auto; }
   .conv-item .dots{ opacity:.55; flex:0 0 auto; }
+  .fab-new-chat{
+    position:absolute; right:16px; bottom:20px; background:var(--ink-pill); color:#fff; border-radius:24px;
+    padding:12px 18px; display:flex; align-items:center; gap:8px; font-weight:600; font-size:14px;
+    box-shadow:0 6px 16px rgba(0,0,0,.2);
+  }
 
   .sheet-screen{ justify-content:flex-end; }
   .sheet-scrim{ flex:1; background:rgba(0,0,0,.35); }
@@ -122,7 +131,8 @@
   .model-row{ padding:14px 20px; display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--outline-light); }
   .model-row .name{ font-weight:600; font-size:14.5px; }
   .model-row .desc{ font-size:12px; color:var(--ink-600); margin-top:3px; }
-  .model-row .check{ color:var(--clay-500); }
+  .model-row .check{ color:var(--link-blue); }
+  .model-row.selected .name, .model-row.selected .desc{ color:var(--link-blue); }
 
   .settings-body{ padding:20px 22px; overflow:hidden; }
   .settings-section-title{ font-weight:600; font-size:14px; margin:0 0 10px; }
@@ -130,7 +140,8 @@
   .settings-row{ display:flex; justify-content:space-between; align-items:center; font-size:13.5px; }
   .chip-row{ display:flex; border:1.5px solid var(--outline-light); border-radius:12px; overflow:hidden; }
   .chip{ flex:1; text-align:center; padding:9px 0; font-size:12.5px; }
-  .chip.active{ background:var(--clay-500); color:#fff; font-weight:600; }
+  .chip.active{ background:var(--link-blue); color:#fff; font-weight:600; }
+  .settings-title{ font-family:Georgia,"Iowan Old Style",serif; font-weight:400; font-size:19px; }
   .danger-btn{ border:1.5px solid var(--error); color:var(--error); border-radius:12px; padding:11px; text-align:center; font-size:13px; font-weight:600; }
   .select-pill{ border:1.5px solid var(--outline-light); border-radius:12px; padding:10px 14px; display:inline-flex; align-items:center; gap:6px; font-size:13.5px; }
 
@@ -165,6 +176,7 @@
   <symbol id="i-refresh" viewBox="0 0 24 24"><polyline points="21 4 21 9 16 9"/><polyline points="3 20 3 15 8 15"/><path d="M4 9a8.1 8.1 0 0 1 13.7-3.5L21 9M3 15a8.1 8.1 0 0 0 13.7 3.5L20 15"/></symbol>
   <symbol id="i-code" viewBox="0 0 24 24"><polyline points="15 6 21 12 15 18"/><polyline points="9 18 3 12 9 6"/></symbol>
   <symbol id="i-error" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="13"/><circle cx="12" cy="16.2" r="0.4"/></symbol>
+  <symbol id="i-sparkle" viewBox="0 0 108 108"><path d="M54,26 C55.5,41 43,50 26,54 C43,58 55.5,67 54,82 C52.5,67 65,58 82,54 C65,50 52.5,41 54,26 Z" fill="currentColor" stroke="none"/></symbol>
 </defs>
 </svg>
 
@@ -178,7 +190,7 @@
       <div class="field-label">API key</div>
       <div class="field"><span>sk-ant-…</span><svg class="icon"><use href="#i-eye"/></svg></div>
       <div class="hint">You can get a key from console.anthropic.com.</div>
-      <div class="primary-btn disabled">Start chatting</div>
+      <div class="primary-btn">Start chatting</div>
     </div>
   </div></div>
 </div>
@@ -192,7 +204,10 @@
       <div class="model-pill">Sonnet 5 <svg class="icon icon-sm"><use href="#i-chevron-down"/></svg></div>
       <div style="width:38px"></div>
     </div>
-    <div class="empty-state"><h2>What can I help with today?</h2></div>
+    <div class="empty-state"><div>
+      <svg class="icon icon-lg sparkle-mark" style="color:var(--clay-500);display:block;margin:0 auto 16px;"><use href="#i-sparkle"/></svg>
+      <h2>What can I help with today?</h2>
+    </div></div>
     <div class="inputbar"><div class="input-shell">
       <div class="icon-btn" style="width:32px;height:32px;opacity:.65"><svg class="icon icon-sm"><use href="#i-image"/></svg></div>
       <div class="textfield-text">Message AI Client Chat…</div>
@@ -251,7 +266,7 @@
     <div class="drawer">
       <div class="statusbar"><span>9:41</span><span>••••</span></div>
       <div class="drawer-top">
-        <div class="new-chat-btn"><svg class="icon icon-sm"><use href="#i-plus"/></svg>New chat</div>
+        <div class="drawer-title">Chats</div>
         <div class="icon-btn"><svg class="icon"><use href="#i-settings"/></svg></div>
       </div>
       <div class="search-box"><svg class="icon icon-sm"><use href="#i-search"/></svg>Search chats</div>
@@ -261,8 +276,8 @@
         <div class="conv-item"><span class="conv-title">Summarize ML research paper</span><svg class="icon icon-sm dots"><use href="#i-more"/></svg></div>
         <div class="conv-item"><span class="conv-title">Naming ideas for online store</span><svg class="icon icon-sm dots"><use href="#i-more"/></svg></div>
         <div class="conv-item"><span class="conv-title">Fixing an Android layout bug</span><svg class="icon icon-sm dots"><use href="#i-more"/></svg></div>
-        <div class="conv-item"><span class="conv-title">New chat</span><svg class="icon icon-sm dots"><use href="#i-more"/></svg></div>
       </div>
+      <div class="fab-new-chat"><svg class="icon icon-sm"><use href="#i-plus"/></svg>New chat</div>
     </div>
     <div class="drawer-scrim"></div>
   </div></div>
@@ -276,7 +291,7 @@
       <div class="sheet-handle"></div>
       <h3>Choose a model</h3>
       <div class="model-row"><div><div class="name">Opus 5</div><div class="desc">Most capable model for complex tasks and deep reasoning</div></div></div>
-      <div class="model-row"><div><div class="name">Sonnet 5</div><div class="desc">Balances speed and capability — great for most tasks</div></div><svg class="icon check"><use href="#i-check"/></svg></div>
+      <div class="model-row selected"><div><div class="name">Sonnet 5</div><div class="desc">Balances speed and capability — great for most tasks</div></div><svg class="icon check"><use href="#i-check"/></svg></div>
       <div class="model-row"><div><div class="name">Fable 5.1</div><div class="desc">Creative model for writing and natural conversation</div></div></div>
       <div class="model-row"><div><div class="name">Haiku 4.5</div><div class="desc">Fastest model for near-instant responses</div></div></div>
     </div>
@@ -289,12 +304,12 @@
     <div class="statusbar"><span>9:41</span><span>••••</span></div>
     <div class="topbar" style="padding:0 4px">
       <div class="icon-btn"><svg class="icon"><use href="#i-chevron-left"/></svg></div>
-      <div style="font-weight:600">Settings</div>
+      <div class="settings-title">Settings</div>
       <div style="width:38px"></div>
     </div>
     <div class="settings-body">
       <div class="settings-section-title">API key</div>
-      <div class="settings-row"><span>sk-ant…wxYZ</span><span style="color:var(--clay-600);font-weight:600">Delete</span></div>
+      <div class="settings-row"><span>sk-ant…wxYZ</span><span style="color:var(--error);font-weight:600">Delete</span></div>
       <div class="settings-divider"></div>
       <div class="settings-section-title">Default model</div>
       <div class="select-pill">Sonnet 5 <svg class="icon icon-sm"><use href="#i-chevron-down"/></svg></div>
@@ -308,7 +323,7 @@
       <div class="settings-divider"></div>
       <div class="settings-section-title">Text size</div>
       <div style="height:4px;border-radius:2px;background:var(--outline-light);position:relative;margin:14px 4px;">
-        <div style="position:absolute;left:0;top:-8px;width:20px;height:20px;border-radius:50%;background:var(--clay-500)"></div>
+        <div style="position:absolute;left:0;top:-8px;width:20px;height:20px;border-radius:50%;background:var(--link-blue)"></div>
       </div>
       <div class="settings-divider"></div>
       <div class="danger-btn">Delete all chats</div>

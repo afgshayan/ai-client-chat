@@ -15,11 +15,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
+// Claude's real app reserves the clay/orange for its brand mark and uses a
+// plain blue for interactive/selected state (checkmarks, toggles, links),
+// with solid black (or white, in dark mode) pills for primary actions.
 private val LightColors = lightColorScheme(
-    primary = Clay500,
+    primary = LinkBlue,
     onPrimary = CreamSurface,
-    primaryContainer = Clay500.copy(alpha = 0.14f),
-    onPrimaryContainer = Clay700,
+    primaryContainer = LinkBlue.copy(alpha = 0.12f),
+    onPrimaryContainer = LinkBlue,
     secondary = Ink600,
     background = CreamBg,
     onBackground = Ink900,
@@ -29,13 +32,15 @@ private val LightColors = lightColorScheme(
     onSurfaceVariant = Ink600,
     outline = OutlineLight,
     error = ErrorRed,
+    inverseSurface = Ink900,
+    inverseOnSurface = CreamSurface,
 )
 
 private val DarkColors = darkColorScheme(
-    primary = Clay500,
+    primary = LinkBlueDark,
     onPrimary = CharcoalBg,
-    primaryContainer = Clay500.copy(alpha = 0.22f),
-    onPrimaryContainer = Bone100,
+    primaryContainer = LinkBlueDark.copy(alpha = 0.22f),
+    onPrimaryContainer = LinkBlueDark,
     secondary = Bone400,
     background = CharcoalBg,
     onBackground = Bone100,
@@ -45,6 +50,8 @@ private val DarkColors = darkColorScheme(
     onSurfaceVariant = Bone400,
     outline = OutlineDark,
     error = ErrorRed,
+    inverseSurface = Bone100,
+    inverseOnSurface = CharcoalBg,
 )
 
 enum class AppThemeMode { SYSTEM, LIGHT, DARK }

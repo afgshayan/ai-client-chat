@@ -24,3 +24,8 @@ val Bone400 = Color(0xFFB8B5AA)
 val OutlineDark = Color(0xFF3D3B37)
 
 val ErrorRed = Color(0xFFC4432E)
+
+// Selection/interactive accent (checkmarks, toggles, links) — Claude's real
+// app uses blue here, reserving the clay/orange for the brand mark only.
+val LinkBlue = Color(0xFF3B68C4)
+val LinkBlueDark = Color(0xFF8AB4F8)

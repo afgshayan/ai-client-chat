@@ -44,6 +44,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.aiclient.chat.R
 import com.aiclient.chat.data.model.Conversation
+import com.aiclient.chat.ui.theme.Clay600
 
 @Composable
 fun ConversationDrawer(
@@ -121,7 +122,7 @@ private fun ConversationRow(
     var confirmDelete by remember { mutableStateOf(false) }
 
     Surface(
-        color = if (selected) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surface,
+        color = if (selected) MaterialTheme.colorScheme.onBackground.copy(alpha = 0.06f) else MaterialTheme.colorScheme.surface,
         onClick = onClick,
         modifier = Modifier.fillMaxWidth(),
     ) {
@@ -137,7 +138,7 @@ private fun ConversationRow(
                         Icons.Outlined.PushPin,
                         contentDescription = null,
                         modifier = Modifier.padding(end = 6.dp),
-                        tint = MaterialTheme.colorScheme.primary,
+                        tint = Clay600,
                     )
                 }
                 Text(

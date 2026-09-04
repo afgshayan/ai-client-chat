@@ -36,6 +36,8 @@ fun ModelPickerSheet(
         )
         Column(modifier = Modifier.padding(bottom = 24.dp)) {
             Models.AVAILABLE.forEach { model ->
+                val isSelected = model.id == selectedModel
+                val emphasisColor = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -44,14 +46,14 @@ fun ModelPickerSheet(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Column(modifier = Modifier.weight(1f)) {
-                        Text(model.displayName, style = MaterialTheme.typography.titleMedium)
                         Text(
-                            model.description,
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            model.displayName,
+                            style = MaterialTheme.typography.titleMedium,
+                            color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
                         )
+                        Text(model.description, style = MaterialTheme.typography.bodyMedium, color = emphasisColor)
                     }
-                    if (model.id == selectedModel) {
+                    if (isSelected) {
                         Icon(Icons.Outlined.Check, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
                     }
                 }

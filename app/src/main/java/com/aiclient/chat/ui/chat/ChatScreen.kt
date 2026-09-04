@@ -55,11 +55,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.aiclient.chat.R
 import com.aiclient.chat.data.model.ChatMessage
 import com.aiclient.chat.data.model.Models
+import com.aiclient.chat.ui.theme.Clay500
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -215,6 +217,14 @@ fun ChatScreen(
 private fun EmptyState(modifier: Modifier = Modifier) {
     Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Icon(
+                painter = painterResource(R.drawable.ic_sparkle),
+                contentDescription = null,
+                tint = Clay500,
+                modifier = Modifier
+                    .size(28.dp)
+                    .padding(bottom = 16.dp),
+            )
             Text(
                 stringResource(R.string.empty_state_greeting),
                 style = MaterialTheme.typography.headlineMedium,
@@ -295,9 +305,14 @@ private fun ChatInputBar(
                         onClick = onStop,
                         modifier = Modifier
                             .size(44.dp)
-                            .clip(CircleShape),
+                            .clip(CircleShape)
+                            .background(MaterialTheme.colorScheme.inverseSurface),
                     ) {
-                        Icon(Icons.Outlined.Stop, contentDescription = stringResource(R.string.stop_generating))
+                        Icon(
+                            Icons.Outlined.Stop,
+                            contentDescription = stringResource(R.string.stop_generating),
+                            tint = MaterialTheme.colorScheme.inverseOnSurface,
+                        )
                     }
                 } else {
                     IconButton(
@@ -306,12 +321,12 @@ private fun ChatInputBar(
                         modifier = Modifier
                             .size(44.dp)
                             .clip(CircleShape)
-                            .background(MaterialTheme.colorScheme.primary),
+                            .background(MaterialTheme.colorScheme.inverseSurface),
                     ) {
                         Icon(
                             Icons.Outlined.ArrowUpward,
                             contentDescription = stringResource(R.string.send),
-                            tint = MaterialTheme.colorScheme.onPrimary,
+                            tint = MaterialTheme.colorScheme.inverseOnSurface,
                         )
                     }
                 }
